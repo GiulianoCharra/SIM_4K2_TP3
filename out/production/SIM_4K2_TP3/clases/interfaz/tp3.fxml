@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane style="-fx-border-color: black; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clases.Controllers.tp3Controller">
+   <children>
+      <Label fx:id="lbl_A" layoutX="61.0" layoutY="89.0" text="A" />
+      <Button fx:id="bt_Calcular" layoutX="95.0" layoutY="178.0" mnemonicParsing="false" onAction="#calcular" prefHeight="25.0" prefWidth="125.0" text="Calcular" />
+      <TextField fx:id="tf_A" layoutX="88.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label fx:id="lbl_Distribucion" alignment="TOP_CENTER" layoutX="23.0" layoutY="40.0" prefHeight="26.0" prefWidth="1041.0" text="setDitribucion" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0">
+         <font>
+            <Font size="17.0" />
+         </font>
+      </Label>
+      <Label layoutX="43.0" layoutY="136.0" text="Muestra" />
+      <TextField fx:id="tf_muestra" layoutX="98.0" layoutY="132.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label fx:id="lbl_B" layoutX="170.0" layoutY="89.0" text="B" />
+      <TextField fx:id="tf_B" layoutX="190.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label layoutX="194.0" layoutY="136.0" text="Intervalos" />
+      <RadioButton layoutX="260.0" layoutY="136.0" mnemonicParsing="false" selected="true" text="5">
+         <toggleGroup>
+            <ToggleGroup fx:id="tg_intervalo" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton layoutX="300.0" layoutY="136.0" mnemonicParsing="false" text="10" toggleGroup="$tg_intervalo" />
+      <RadioButton layoutX="340.0" layoutY="136.0" mnemonicParsing="false" text="15" toggleGroup="$tg_intervalo" />
+      <RadioButton layoutX="380.0" layoutY="136.0" mnemonicParsing="false" text="20" toggleGroup="$tg_intervalo" />
+      <Label fx:id="lbl_Lambda" layoutX="273.0" layoutY="89.0" text="Lambda (λ)" />
+      <TextField fx:id="tf_Lambda" layoutX="347.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label fx:id="lbl_Media" layoutX="431.0" layoutY="89.0" text="Media (μ)" />
+      <TextField fx:id="tf_Media" layoutX="499.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label fx:id="lbl_Varianza" layoutX="589.0" layoutY="89.0" text="Varianza (σ^2)" />
+      <TextField fx:id="tf_Varianza" layoutX="677.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <Label fx:id="lbl_Desviacion" layoutX="766.0" layoutY="89.0" text="Desviacion (σ)" />
+      <TextField fx:id="tf_Desviacion" layoutX="854.0" layoutY="85.0" prefHeight="25.0" prefWidth="61.0" />
+      <GridPane hgap="10.0" layoutX="48.0" layoutY="272.0" prefHeight="511.0" prefWidth="1547.0" AnchorPane.bottomAnchor="17.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="271.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="324.0" prefWidth="419.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="804.0" prefWidth="1118.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints fillHeight="false" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <LineChart fx:id="lc_Distribucion" prefHeight="795.0" prefWidth="1221.0" style="-fx-border-color: black;" GridPane.columnIndex="1">
+               <xAxis>
+                  <CategoryAxis side="BOTTOM" />
+               </xAxis>
+               <yAxis>
+                  <NumberAxis side="LEFT" />
+               </yAxis>
+            </LineChart>
+            <TableView fx:id="tv_Distribuccion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="797.0" prefWidth="632.0">
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+               <columns>
+                  <TableColumn minWidth="30.0" prefWidth="104.0" text="Iteracion" />
+                  <TableColumn prefWidth="181.0" text="Random" />
+                  <TableColumn prefWidth="168.0" text="setDistribucion" />
+               </columns>
+            </TableView>
+         </children>
+      </GridPane>
+   </children>
+</AnchorPane>
