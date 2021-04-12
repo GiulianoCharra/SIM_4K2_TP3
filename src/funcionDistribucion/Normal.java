@@ -1,46 +1,39 @@
 package funcionDistribucion;
 
-public class Normal extends VariablesAleatorias
+public class Normal
 {
-    private float media;
-    private float varianza;
-    private  float desviacion;
-    private float[][] rnd;
-    private float[] rnd1;
-    private float[] rnd2;
-    private float[] N1;
-    private float[] N2;
-    private int muestra;
+    private double media;
+    private double varianza;
+    private double desviacion;
+    private double[] normal;
 
-    public Normal(float[] rnd1, float[] rnd2, float media, float varianza)
+    public Normal(double media, double desviacion)
     {
         this.media = media;
-        this.varianza = varianza;
-        this.rnd1 = rnd1;
-        this.rnd2 = rnd2;
-        this.N1 = new float[muestra];
-        this.N2 = new float[muestra];
-        this.muestra = rnd2.length;
+        this.desviacion = desviacion;
     }
 
-    @Override
-    public float calcularMedia()
+    public double calcularMedia(double desviacion)
     {
-        return 0;
+        varianza =  Math.pow(desviacion,2);
+        return varianza;
     }
 
-    @Override
-    public float calcularVarianza() {
-        return 0;
-    }
 
-    public float calcularDesviacionEstandar()
+    public double calcularVarianza()
     {
-        desviacion = (float) Math.sqrt(varianza);
+        varianza = 1;
+        return varianza;
+    }
+
+
+    public double calcularDesviacionEstandar()
+    {
+        desviacion = Math.sqrt(varianza);
         return desviacion;
     }
 
-    @Override
+
     public void funcionDensidad() {
 
     }
@@ -48,37 +41,104 @@ public class Normal extends VariablesAleatorias
     /**
      * No tiene funcion Acumulada
      */
-    @Override
+
     public void funcionAcumulada() {
 
     }
 
-    public void generadorBox_Muller()
+
+    /**
+     * Calculo de la distribucion Normal mediante el metodo
+     *                  Box Muller
+     *
+     * @param media es ingresado por parametros
+     * @param desviacion es ingresado por parametros
+     * @return retorna un vector Double con los numeros aleatoria con Distribucion
+     */
+    public static double[] box_Muller(double media, double desviacion, int muestra)
     {
-        for (int i = 0; i < muestra; i++)
+
+        System.out.println("PRIMERA PARTE \n genera lo random");
+        double[] numeros = new double[muestra*2];
+        for (int i = 0; i < muestra*2; i++)
         {
-            N1[i] = (float) ((Math.sqrt(-2 * Math.log(rnd1[i])) * Math.cos(2 * Math.PI * rnd2[i])) * desviacion + media);
-            N2[i] = (float) ((Math.sqrt(-2 * Math.log(rnd1[i])) * Math.sin(2 * Math.PI * rnd2[i])) * desviacion + media);
+            numeros[i] = Math.random();
+            System.out.println(String.valueOf(numeros[i]).replace('.',','));
         }
+
+        return generadorBox_Muller(media, desviacion, numeros);
+    }
+
+    public double[] box_Muller(double media, double desviacion,double[] numeros)
+    {
+        return generadorBox_Muller(media, desviacion, numeros);
     }
 
 
-    public float[] generadorConvolucion()
+    private static double[] generadorBox_Muller(double media, double desviacion, double[] numeros)
     {
-        float[] convolucion = new float[muestra];
-        rnd = new float[muestra][12];
-
-        float sum = 0;
-
-        for (int i = 0; i < rnd.length; i++)
+        int tam = numeros.length;
+        double[ ]normal = new double[tam];
+        System.out.println("Segunda PARTE \n hace la cosa esta");
+        for (int i = 0; i < tam; i+=2)
         {
-            for (int j = 0; j < rnd[i].length; j++)
-            {
-                rnd[i][j] = (float) Math.round(Math.random()*10000)/10000;
-                sum += rnd[i][j];
+            normal[i] = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.cos(2 * Math.PI * numeros[i+1])) * desviacion + media);
+            normal[i+1] = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.sin(2 * Math.PI * numeros[i+1])) * desviacion + media);
+        }
+        System.out.println(tam);
+        return normal;
+    }
+
+
+    /**
+     * Calculo de la distribucion Normal mediante el metodo
+     *                    Convolucion
+     *
+     * @param media es un float recibido por parametros
+     * @param desviacion es un float recibido por parametros
+     * @param muestra un numero int multiplo de 12
+     * @return una serie de numeros normalizados mediante convolucion
+     */
+    public static double[] convolucion(double media, double desviacion, int muestra)
+    {
+        double[] numeros = new double[muestra*12];
+
+        System.out.println("PRIMERA PARTE \n genera lo random\n");
+
+        for (int i = 0; i < muestra*12; i++)
+        {
+            numeros[i] = Math.random();
+        }
+        return generaradorConvulcion( media, desviacion, numeros);
+    }
+
+    public static double[] convolucion(double media, double desviacion, double[] numeros)
+    {
+        return generaradorConvulcion( media, desviacion, numeros);
+    }
+
+    private static double[] generaradorConvulcion(double media, double desviacion, double[] numeros)
+    {
+        int tam = numeros.length/12;
+
+        double[] convolucion = new double[tam];
+
+        double sum = 0;
+        int cont = 1;
+
+        System.out.println("\nSegunda PARTE \n hace la cosa esta\n");
+
+        int pos = 0;
+        for (double numero : numeros)
+        {
+            if (cont == 12) {
+                convolucion[pos] = (sum - 6) * desviacion + media;
+                sum = 0;
+                cont = 0;
+                pos++;
             }
-            convolucion[i] = (sum - 6) * desviacion + media;
-            sum = 0;
+            sum += numero;
+            cont++;
         }
         return convolucion;
     }

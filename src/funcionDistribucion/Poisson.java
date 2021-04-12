@@ -1,6 +1,6 @@
 package funcionDistribucion;
 
-public class Poisson extends VariablesAleatorias
+public class Poisson
 {
     private float lamda;
     private float media;
@@ -11,39 +11,48 @@ public class Poisson extends VariablesAleatorias
         this.lamda = lamda;
     }
 
-    @Override
-    public float calcularMedia() {
-        return 0;
+
+    public float calcularMedia()
+    {
+        media = lamda;
+        return media;
     }
 
-    @Override
-    public float calcularVarianza() {
-        return 0;
+
+    public float calcularVarianza()
+    {
+        varianza = lamda;
+        return varianza;
     }
 
-    @Override
+
     public void funcionDensidad() {
 
     }
 
-    @Override
+
     public void funcionAcumulada() {
 
     }
 
-
-    public double generadorPoisson()
+    public static double generar(double lamba)
     {
+        return generadorPoisson(lamba);
+    }
 
+    private static double generadorPoisson(double lamda)
+    {
         double P = 1;
         int X = -1;
         double A = Math.pow(Math.E,-lamda);
+        double U;
         do {
-            double U = Math.random();
+            U = Math.random();
             P *= U;
             X ++;
         }while (P >= A);
 
         return X;
     }
+
 }

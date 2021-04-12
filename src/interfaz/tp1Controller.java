@@ -3,13 +3,13 @@ package interfaz;
 import clases.Chi_Cuadrado;
 import clases.Generador;
 import clases.Numero;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -18,11 +18,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Controller implements Initializable
+public class tp1Controller implements Initializable
 {
     public TextField tf_Semilla;
     public TextField tf_A_Multiplicativa;
@@ -69,11 +68,6 @@ public class Controller implements Initializable
     public TableView<Numero> tv_NumerosGenerados;
     public BarChart<?,?> bc_Resultados;
 
-    @FXML
-    private CategoryAxis x;
-
-    @FXML
-    private NumberAxis y;
 
     private int x0;
     private int a;
@@ -81,7 +75,6 @@ public class Controller implements Initializable
     private int m;
     private int k;
     private int g;
-    private boolean metodo = true;//true = lineal -- false = Multiplicativo
     private Chi_Cuadrado chi;
     private Generador generador;
     private ObservableList<Numero> numeros;
@@ -89,6 +82,15 @@ public class Controller implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
+        formatTextFiield(tf_Semilla);
+        formatTextFiield(tf_A_Multiplicativa);
+        formatTextFiield(tf_C_Aditiva);
+        formatTextFiield(tf_Modulo);
+        formatTextFiield(tf_K_Valor);
+        formatTextFiield(tf_G_Valor);
+        formatTextFiield(tf_Semilla);
+        formatTextFiield(tf_Muestra);
+
         tc_Iteraciones.setCellValueFactory(new PropertyValueFactory<>("iteracion"));
         tc_N_Generados.setCellValueFactory(new PropertyValueFactory<>("numRand"));
 
@@ -108,28 +110,42 @@ public class Controller implements Initializable
     }
 
 
+    private void formatTextFiield(TextField tf)
+    {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue observableValue, String o, String num) {
+                if (!num.matches("\\d*")) {
+                    tf.setText(num.replaceAll("[^\\d]", ""));
+                }
+            }
+
+        });
+    }
+
     public void changeMetodo()
     {
         if (rb_Multiplicativo.isSelected())
         {
-            lbl_c_Desc.setText("c vale '0', no se usa");
+            lbl_c_Desc.setText("c no se usa");
             tf_C_Aditiva.setText("0");
             tf_C_Aditiva.setEditable(false);
-            metodo = false;
        }
         else
         {
             lbl_c_Desc.setText("c es una constante aditiva");
             tf_C_Aditiva.setEditable(true);
-            metodo = true;
         }
     }
 
 
     public void calcular_K()
     {
+        if (tf_A_Multiplicativa.getText().isEmpty())
+            return;
+
         a = Integer.parseInt(tf_A_Multiplicativa.getText());
-        if (rb_LinealMixto.isPressed())
+        if (rb_LinealMixto.isSelected())
             {
                 k = (a-1)/4;
             }
@@ -140,15 +156,20 @@ public class Controller implements Initializable
 
     public void calcular_G()
     {
+        if (tf_Modulo.getText().isEmpty())
+            return;
         m = Integer.parseInt(tf_Modulo.getText());
-        g = (int)(Math.log(m)/Math.log(2));
+        g = (int) (Math.log(m)/Math.log(2));
         tf_G_Valor.setText(String.valueOf(g));
     }
 
     public void calcular_A_multiplicativa()
     {
+        if (tf_K_Valor.getText().isEmpty())
+            return;
+
         k = Integer.parseInt(tf_K_Valor.getText());
-        if (metodo)
+        if (rb_LinealMixto.isSelected())
         {
             a = 1+4*k;
         }
@@ -159,6 +180,9 @@ public class Controller implements Initializable
 
     public void calcular_Modulo()
     {
+        if (tf_G_Valor.getText().isEmpty())
+            return;
+
         g = Integer.parseInt(tf_G_Valor.getText());
         m = (int) Math.pow(2,g);
         tf_Modulo.setText(String.valueOf(m));
@@ -168,8 +192,8 @@ public class Controller implements Initializable
     {
         numeros = FXCollections.observableArrayList();
 
-        x0 = Integer.parseInt(tf_Semilla.getText());
-        c = Integer.parseInt(tf_C_Aditiva.getText());
+        x0 = (int) Float.parseFloat(tf_Semilla.getText());
+        c = (int) Float.parseFloat(tf_C_Aditiva.getText());
         float num;
 
         generador = new Generador(x0, a, c, m);
@@ -203,14 +227,12 @@ public class Controller implements Initializable
         tv_NumerosGenerados.setItems(numeros);
     }
 
-    public void close()
-    {
-        Stage stage = (Stage)btnSalir.getScene().getWindow();
-        stage.close();
-    }
 
     public void calcularChi()
     {
+
+        if (tf_Muestra.getText().isEmpty())
+            return;
 
         //ObservableList<Float>  vecMuestra= FXCollections.observableArrayList();
 
