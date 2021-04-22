@@ -30,7 +30,7 @@ public class PageLoader {
 
         }catch (Exception e)
         {
-            System.out.println("No se encontro la pagina " + filename + "volve a intentar");
+            System.out.println("No se encontro la pagina " + filename +  " volve a intentar");
         }
 
         return vista;

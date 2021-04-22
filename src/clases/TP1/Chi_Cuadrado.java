@@ -7,7 +7,7 @@ public class Chi_Cuadrado
 {
     private int cantIntervalos;
     private int muestra;
-    private float[] vecNum;
+
     private ObservableList<Intervalo> intervalos;
 
     public Chi_Cuadrado(int muestra, int cantIntervalos)
@@ -30,6 +30,7 @@ public class Chi_Cuadrado
             sup += tam;
         }
     }
+
 
 
     private void f_Esperada()
@@ -167,7 +168,7 @@ public class Chi_Cuadrado
 
         @Override
         public String toString() {
-            return "Intervalo{" +
+            return "intervaloExp{" +
                     "num=" + numIt +
                     ", inferior=" + inferior +
                     ", superior=" + superior +

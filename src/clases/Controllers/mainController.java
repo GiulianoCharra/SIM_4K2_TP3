@@ -21,9 +21,10 @@ public class mainController implements Initializable
     public MenuItem mi_Box_Muller;
     public MenuItem mi_Convolucion;
     public MenuItem mi_Poisson;
+    public MenuItem mi_Generador;
+    public MenuItem mi_Salir;
     public BorderPane bp_Vista;
     public MenuBar mb_Opciones;
-    public MenuItem mi_Generador;
     public Button btn_Salir;
 
     @Override
@@ -53,15 +54,15 @@ public class mainController implements Initializable
         if (mi_Generador.equals(str)) {
             fmxl = "tp1";
         } else if (mi_Uniforme.equals(str)) {
-            fmxl = "tp3";
+            fmxl = "Uniforme";
         } else if (mi_Exponensial.equals(str)) {
-            fmxl = "tp3";
+            fmxl = "Exponencial";
         } else if (mi_Box_Muller.equals(str)) {
-            fmxl = "tp3";
+            fmxl = "Box_Muller";
         } else if (mi_Convolucion.equals(str)) {
-            fmxl = "tp3";
+            fmxl = "Convolucion";
         } else if (mi_Poisson.equals(str)) {
-            fmxl = "tp3";
+            fmxl = "Poisson";
         } else {
             throw new IllegalStateException("Unexpected value: " + str);
         }
