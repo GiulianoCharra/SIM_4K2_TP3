@@ -58,7 +58,7 @@ public class mainController implements Initializable
         } else if (mi_Exponensial.equals(str)) {
             fmxl = "Exponencial";
         } else if (mi_Box_Muller.equals(str)) {
-            fmxl = "Box_Muller";
+            fmxl = "Bob_Muller";
         } else if (mi_Convolucion.equals(str)) {
             fmxl = "Convolucion";
         } else if (mi_Poisson.equals(str)) {

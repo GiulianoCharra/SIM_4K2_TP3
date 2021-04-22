@@ -1,17 +1,34 @@
 package clases.funcionDistribucion;
 
+import clases.soporte.Intervalo;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
+import java.rmi.MarshalException;
+
 public class Normal
 {
     private double media;
     private double varianza;
     private double desviacion;
+    private int muestra;
     private double[] normal;
+
+    private double min;
+    private double max;
+    private ObservableList<Intervalo> intervalosNormal = FXCollections.observableArrayList();
+
+    public Normal() {
+
+    }
 
     public Normal(double media, double desviacion)
     {
         this.media = media;
         this.desviacion = desviacion;
     }
+
+
 
     public double calcularMedia(double desviacion)
     {
@@ -55,12 +72,20 @@ public class Normal
      * @param desviacion es ingresado por parametros
      * @return retorna un vector Double con los numeros aleatoria con Distribucion
      */
-    public static double[] box_Muller(double media, double desviacion, int muestra)
+    public double[] box_Muller(double media, double desviacion, int muestra)
     {
 
         System.out.println("PRIMERA PARTE \n genera lo random");
-        double[] numeros = new double[muestra*2];
-        for (int i = 0; i < muestra*2; i++)
+
+        System.out.println("Primera muestra: " + muestra);
+        if (muestra % 2 == 1)
+        {   this.muestra = muestra;
+            muestra += 1;
+        }
+        System.out.println("Nueva muestra: " + muestra);
+
+        double[] numeros = new double[muestra];
+        for (int i = 0; i < muestra; i++)
         {
             numeros[i] = Math.random();
             System.out.println(String.valueOf(numeros[i]).replace('.',','));
@@ -75,7 +100,7 @@ public class Normal
     }
 
 
-    private static double[] generadorBox_Muller(double media, double desviacion, double[] numeros)
+    private double[] generadorBox_Muller(double media, double desviacion, double[] numeros)
     {
         int tam = numeros.length;
         double[ ]normal = new double[tam];
@@ -99,9 +124,11 @@ public class Normal
      * @param muestra un numero int multiplo de 12
      * @return una serie de numeros normalizados mediante convolucion
      */
-    public static double[] convolucion(double media, double desviacion, int muestra)
+    public double[] convolucion(double media, double desviacion, int muestra)
     {
-        double[] numeros = new double[muestra*12];
+        double[] numeros = new double[muestra * 12];
+        this.media = media;
+        this.desviacion = desviacion;
 
         System.out.println("PRIMERA PARTE \n genera lo random\n");
 
@@ -112,16 +139,18 @@ public class Normal
         return generaradorConvulcion( media, desviacion, numeros);
     }
 
-    public static double[] convolucion(double media, double desviacion, double[] numeros)
+    public double[] convolucion(double media, double desviacion, double[] numeros)
     {
+        this.media = media;
+        this.desviacion = desviacion;
         return generaradorConvulcion( media, desviacion, numeros);
     }
 
-    private static double[] generaradorConvulcion(double media, double desviacion, double[] numeros)
+    private double[] generaradorConvulcion(double media, double desviacion, double[] numeros)
     {
         int tam = numeros.length/12;
 
-        double[] convolucion = new double[tam];
+        this.normal = new double[tam];
 
         double sum = 0;
         int cont = 1;
@@ -131,8 +160,9 @@ public class Normal
         int pos = 0;
         for (double numero : numeros)
         {
-            if (cont == 12) {
-                convolucion[pos] = (sum - 6) * desviacion + media;
+            if (cont == 12)
+            {
+                normal[pos] = (sum - 6) * desviacion + media;
                 sum = 0;
                 cont = 0;
                 pos++;
@@ -140,7 +170,147 @@ public class Normal
             sum += numero;
             cont++;
         }
-        return convolucion;
+        return normal;
+    }
+
+    private void calcularF_Observada()
+    {
+        for (double n: normal)
+        {
+            for (Intervalo i: intervalosNormal)
+            {
+                System.out.println("Inf: " + i.getInferior()+
+                        " Sup: " + i.getSuperior()+
+                        " N°: " + n);
+                if (n <= i.getSuperior())
+                {
+                    System.out.println("aceptado");
+                    i.contar();
+                    break;
+                }
+            }
+        }
+    }
+
+    public void  calcIntervalos(int cantIntervalos, double[] vecE)
+    {
+
+        double dif = max - min;
+        double ancho = dif/cantIntervalos;
+        System.out.println("ancho: " + ancho);
+        double desde = min;
+
+        for (int i = 0; i < cantIntervalos; i++)
+        {
+            intervalosNormal.add(new Intervalo(i,(float) Math.round(desde * 10000) / 10000, (float) Math.round((desde + ancho) * 10000) / 10000));
+            desde += ancho;
+            System.out.println(intervalosNormal.get(i));
+        }
+
+
+    }
+
+    public void probabilidad(int tam)
+    {
+        double p ;
+        for (Intervalo ie: intervalosNormal)
+        {
+
+            p = (Math.pow(Math.E,(-0.5*(Math.pow((((ie.getInferior()+ ie.getSuperior())/2)-media),2))))/(desviacion * Math.sqrt(2*Math.PI)))*(ie.getSuperior()-ie.getInferior());                                                                                                ;
+            ie.setF_Esp((float)Math.round((p * tam)*10000)/10000);
+            System.out.println("\n frecuencia esperada: " + ie);
+        }
+
+    }
+
+
+    public ObservableList<Intervalo> crearTablaChi()
+    {
+        ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
+        Intervalo aux = new Intervalo();
+
+
+        boolean ban = false;
+
+        for (Intervalo ie: intervalosNormal)
+        {
+            if (ie.getF_Esp()>= 5)
+            {
+                tablaChi.add(ie);
+            }
+            else
+            {
+                if (!ban)
+                {
+                    aux = new Intervalo();
+                    aux = ie;
+                    ban = true;
+
+                    System.out.println("\n SOy el auxiliar: " + aux);
+                }
+                else
+                {
+                    aux.setSuperior(ie.getSuperior());
+                    aux.setF_Obs(aux.getF_Obs() + ie.getF_Obs());
+                    aux.setF_Esp(aux.getF_Esp() + ie.getF_Esp());
+
+                    System.out.println("\n SOy el auxiliar: " + aux);
+
+                    if (aux.getF_Esp()>= 5)
+                    {
+                        tablaChi.add(aux);
+                        aux = null;
+                        ban = false;
+                    }
+                }
+            }
+        }
+
+        if (aux != null)
+        {
+            Intervalo last = tablaChi.get(tablaChi.size() - 1);
+            last.setSuperior(aux.getSuperior());
+            last.setF_Obs(last.getF_Obs() + aux.getF_Obs());
+            last.setF_Esp(last.getF_Esp() + aux.getF_Esp());
+        }
+
+        for (Intervalo e: tablaChi
+        ) {
+            System.out.println("\n"+e);
+
+        }
+
+        return tablaChi;
+    }
+
+    public ObservableList<Intervalo> calcularChi(int cantIntervalos, double[] vecE)
+    {
+        calcIntervalos(cantIntervalos, vecE);
+        calcularF_Observada();
+        probabilidad(vecE.length);
+
+        float sum = 0;
+        int fO;
+        float fE;
+
+        ObservableList<Intervalo> tablaChi = crearTablaChi();
+
+        for (Intervalo chi: tablaChi)
+        {
+            fO = chi.getF_Obs();
+            fE = chi.getF_Esp();
+            float v = (float) (Math.pow((fO - fE), 2) / fE);
+            System.out.println("fObse:" +fO+ " fEsp: " + fE+" nuevo: " + sum + "+"+ v + "= " + ((sum + v)) );
+            sum += v;
+            chi.setChi((float)Math.round(sum * 1000) / 1000);
+        }
+        return tablaChi;
+    }
+
+
+
+    public ObservableList<Intervalo> getIntervalosNormal() {
+        return intervalosNormal;
     }
 
 

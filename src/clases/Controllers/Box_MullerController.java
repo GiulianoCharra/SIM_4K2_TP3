@@ -1,7 +1,9 @@
 package clases.Controllers;
 
 import clases.TP1.Numero;
+import clases.funcionDistribucion.Exponencial;
 import clases.funcionDistribucion.Normal;
+import clases.soporte.Intervalo;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,10 +11,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
@@ -22,7 +23,9 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Box_MullerController implements Initializable {
+public class Box_MullerController implements Initializable
+{
+
     public AnchorPane ap_base;
     public Button bt_Calcular;
     public TextField tf_muestra;
@@ -30,11 +33,18 @@ public class Box_MullerController implements Initializable {
     public TextField tf_Varianza;
     public TextField tf_Desviacion;
 
+    public ToggleGroup tg_intervalo;
+
+    public TableView tv_Numeros;
     public TableColumn<Numero,Float> tc_Numeros;
-    public TableColumn tc_F_Esperada;
-    public TableColumn tc_Chi;
-    public TableColumn tc_F_Obserbada;
+
     public TableView tv_Distribuccion;
+    public TableColumn<Object, Object> tc_F_Esperada;
+    public TableColumn<Object, Object> tc_Chi;
+    public TableColumn<Object, Object> tc_F_Obserbada;
+    public TableColumn<Object, Object> tc_Desde;
+    public TableColumn<Object, Object> tc_Hasta;
+    public LineChart lc_Distribucion;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -42,16 +52,12 @@ public class Box_MullerController implements Initializable {
         Box_MullerController cn  = this;
         formatNodes(cn.ap_base);
 
-//        formatTextFiield(tf_A);
-//        formatTextFiield(tf_B);
-//        formatTextFiield(tf_Lambda);
-//        formatTextFiield(tf_Media);
-//        formatTextFiield(tf_Desviacion);
-//        formatTextFiield(tf_Varianza);
-//        formatTextFiield(tf_muestra);
-
-
         tc_Numeros.setCellValueFactory(new PropertyValueFactory<Numero,Float>("numRand"));
+        tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
+        tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));
+        tc_F_Obserbada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
+        tc_F_Esperada.setCellValueFactory(new PropertyValueFactory<>("f_Esp"));
+        tc_Chi.setCellValueFactory(new PropertyValueFactory<>("chi"));
 
     }
     public void formatNodes(Node node) {
@@ -102,9 +108,10 @@ public class Box_MullerController implements Initializable {
 
     public void calcular(ActionEvent actionEvent)
     {
-        if (tf_muestra.getText().isEmpty())
+        if (tf_muestra.getText().isEmpty() || tf_Media.getText().isEmpty() || tf_Desviacion.getText().isEmpty())
         {
-            JOptionPane.showMessageDialog(null,"No imgreso la muestra","Olvidaste ingresar algo",JOptionPane.PLAIN_MESSAGE);
+
+            JOptionPane.showMessageDialog(null,"Porfavor ingree todos los datos necesarios","Olvidaste ingresar algo",JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
@@ -114,16 +121,42 @@ public class Box_MullerController implements Initializable {
 
         ObservableList<Numero> numeros = FXCollections.observableArrayList();
 
-        double[] vec = Normal.box_Muller(media,desviacion,muestra);
+        Normal box = new Normal();
+
+        double[] vec = box.box_Muller(media, desviacion, muestra);
 
         int i = 0;
         for (double num: vec)
         {
             numeros.add(new Numero(i,(float)Math.round(num*10000)/10000 ));
+            i++;
         }
 
-        tv_Distribuccion.setItems(numeros);
+        RadioButton rb =(RadioButton) tg_intervalo.getSelectedToggle();
+        int cant = Integer.parseInt(rb.getText());
+
+        ObservableList<Intervalo> chi = box.calcularChi(cant,vec);
+
+        tv_Numeros.setItems(numeros);
+       /* tv_Distribuccion.setItems(chi);
 
 
+
+        XYChart.Series<Integer,Float> frecO = new XYChart.Series<>();
+        XYChart.Series<Integer,Float> frecE = new XYChart.Series<>();
+
+        frecE.setName("Esperada");
+        frecO.setName("Obserbada");
+
+        int j = 0;
+        for (Intervalo n: box.getIntervalosEXP())
+        {
+            frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
+            frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
+            j++;
+        }
+
+        lc_Distribucion.getData().clear();
+        lc_Distribucion.getData().addAll(frecO, frecE);*/
     }
 }

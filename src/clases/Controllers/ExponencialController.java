@@ -33,8 +33,13 @@ public class ExponencialController implements Initializable
 
     public ToggleGroup tg_intervalo;
 
-    public TableView tv_Distribuccion;
+
+    public TableView tv_Numeros;
     public TableColumn<Numero,Float> tc_Numeros;
+
+    public TableView tv_Distribuccion;
+    public TableColumn<Object, Object> tc_Hasta;
+    public TableColumn<Object, Object> tc_Desde;
     public TableColumn<Object, Object> tc_F_Obserbada;
     public TableColumn<Object, Object> tc_F_Esperada;
     public TableColumn<Object, Object> tc_Chi;
@@ -46,7 +51,11 @@ public class ExponencialController implements Initializable
         ExponencialController cn  = this;
         formatNodes(cn.ap_base);
 
-        //tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
+        tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
+
+
+        tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
+        tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));
         tc_F_Obserbada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
         tc_F_Esperada.setCellValueFactory(new PropertyValueFactory<>("f_Esp"));
         tc_Chi.setCellValueFactory(new PropertyValueFactory<>("chi"));
@@ -159,7 +168,7 @@ public class ExponencialController implements Initializable
 
         ObservableList<Intervalo> chi = exp.calcularChi(cant,vec);
 
-
+        tv_Numeros.setItems(numeros);
         tv_Distribuccion.setItems(chi);
 
 

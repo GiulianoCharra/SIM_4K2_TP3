@@ -15,6 +15,9 @@ public class Exponencial
     private double max;
     private ObservableList<Intervalo> intervalosEXP = FXCollections.observableArrayList();
 
+    public Exponencial() {
+    }
+
     public Exponencial(float lambda)
     {
         this.lambda = lambda;

@@ -224,6 +224,7 @@ public class tp1Controller implements Initializable {
         float num;
 
         generador = new Generador(x0, a, c, m);
+
         if (rb_LinealMixto.isSelected()) {
             for (int i = 0; i < 20; i++) {
                 num = generador.nextNumeroLineal();
