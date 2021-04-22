@@ -3,6 +3,7 @@ package clases.Controllers;
 import clases.TP1.Chi_Cuadrado;
 import clases.TP1.Generador;
 import clases.TP1.Numero;
+import clases.soporte.Intervalo;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -58,7 +59,7 @@ public class tp1Controller implements Initializable {
     public RadioButton rb_Sistema;
     public RadioButton rb_Multiplicativo_Chi;
 
-    public TableView<Chi_Cuadrado.Intervalo> tv_Test_Chi;
+    public TableView<Intervalo> tv_Test_Chi;
     public TableView<Numero> tv_NumerosGenerados;
 
     public TableColumn tv_Intervalos;
@@ -297,7 +298,7 @@ public class tp1Controller implements Initializable {
         fObs.setName(metodo.getText());
         fEsp.setName("Esperada");
 
-        for (Chi_Cuadrado.Intervalo i : chi.getIntervalos()) {
+        for (Intervalo i : chi.getIntervalos()) {
             fObs.getData().add(new XYChart.Data("" + i.getNumIt(), i.getF_Obs()));
             fEsp.getData().add(new XYChart.Data("" + i.getNumIt(), i.getF_Esp()));
         }

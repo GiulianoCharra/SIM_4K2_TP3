@@ -1,5 +1,6 @@
 package clases.TP1;
 
+import clases.soporte.Intervalo;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -69,7 +70,7 @@ public class Chi_Cuadrado
         f_Observada(numeros);
         float sum = 0;
         int fO;
-        int fE;
+        float fE;
 
         for (Intervalo n: intervalos)
         {
@@ -95,7 +96,7 @@ public class Chi_Cuadrado
         return intervalos;
     }
 
-    public static class Intervalo
+    /*public static class Intervalo
     {
         private int numIt;
         private float inferior;
@@ -177,5 +178,5 @@ public class Chi_Cuadrado
                     ", chi=" + chi +
                     '}';
         }
-    }
+    }*/
 }
