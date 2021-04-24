@@ -1,7 +1,6 @@
 package clases.Controllers;
 
 import clases.TP1.Numero;
-import clases.funcionDistribucion.Exponencial;
 import clases.funcionDistribucion.Normal;
 import clases.soporte.Intervalo;
 import javafx.beans.value.ChangeListener;
@@ -15,10 +14,8 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,10 +32,10 @@ public class Box_MullerController implements Initializable
 
     public ToggleGroup tg_intervalo;
 
-    public TableView tv_Numeros;
-    public TableColumn<Numero,Float> tc_Numeros;
+    public TableView<Numero> tv_Numeros;
+    public TableColumn<Object,Object> tc_Numeros;
 
-    public TableView tv_Distribuccion;
+    public TableView<Intervalo> tv_Distribuccion;
     public TableColumn<Object, Object> tc_F_Esperada;
     public TableColumn<Object, Object> tc_Chi;
     public TableColumn<Object, Object> tc_F_Obserbada;
@@ -52,7 +49,7 @@ public class Box_MullerController implements Initializable
         Box_MullerController cn  = this;
         formatNodes(cn.ap_base);
 
-        tc_Numeros.setCellValueFactory(new PropertyValueFactory<Numero,Float>("numRand"));
+        tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
         tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
         tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));
         tc_F_Obserbada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
@@ -111,7 +108,7 @@ public class Box_MullerController implements Initializable
         tf_Varianza.setText(String.valueOf(varianza));
     }
 
-    public void calcular(ActionEvent actionEvent)
+    public void calcular()
     {
         if (tf_muestra.getText().isEmpty() || tf_Media.getText().isEmpty() || tf_Desviacion.getText().isEmpty())
         {

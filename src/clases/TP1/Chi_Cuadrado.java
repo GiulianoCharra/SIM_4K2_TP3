@@ -6,10 +6,10 @@ import javafx.collections.ObservableList;
 
 public class Chi_Cuadrado
 {
-    private int cantIntervalos;
-    private int muestra;
+    private final int cantIntervalos;
+    private final int muestra;
 
-    private ObservableList<Intervalo> intervalos;
+    private final ObservableList<Intervalo> intervalos;
 
     public Chi_Cuadrado(int muestra, int cantIntervalos)
     {

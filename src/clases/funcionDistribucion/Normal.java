@@ -17,7 +17,7 @@ public class Normal
 
     private double min;
     private double max;
-    private ObservableList<Intervalo> intervalosNormal = FXCollections.observableArrayList();
+    private final ObservableList<Intervalo> intervalosNormal = FXCollections.observableArrayList();
 
     public Normal()
     {
@@ -119,7 +119,7 @@ public class Normal
         double num1;
         double num2;
 
-        this.min = normal[0] = ((Math.sqrt(-2 * Math.log(numeros[0])) * Math.cos(2 * Math.PI * numeros[1])) * desviacion + media);;
+        this.min = normal[0] = ((Math.sqrt(-2 * Math.log(numeros[0])) * Math.cos(2 * Math.PI * numeros[1])) * desviacion + media);
         this.max = min;
 
         System.out.println("Segunda PARTE \n hace la cosa esta");

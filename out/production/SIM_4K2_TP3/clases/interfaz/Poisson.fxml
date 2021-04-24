@@ -17,7 +17,7 @@
 <AnchorPane fx:id="ap_base" style="-fx-border-color: black; -fx-border-radius: 20;" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="clases.Controllers.PoissonController">
    <children>
       <Button fx:id="bt_Calcular" layoutX="95.0" layoutY="178.0" mnemonicParsing="false" onAction="#calcular" prefHeight="25.0" prefWidth="125.0" text="Calcular" />
-      <Label fx:id="lbl_Distribucion" alignment="TOP_CENTER" layoutX="23.0" layoutY="40.0" prefHeight="26.0" prefWidth="1041.0" text="Exponencial" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0">
+      <Label fx:id="lbl_Distribucion" alignment="TOP_CENTER" layoutX="23.0" layoutY="40.0" prefHeight="26.0" prefWidth="1041.0" text="Poisson" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="10.0">
          <font>
             <Font size="17.0" />
          </font>

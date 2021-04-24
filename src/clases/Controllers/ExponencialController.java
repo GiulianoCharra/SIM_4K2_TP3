@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -87,7 +86,7 @@ public class ExponencialController<E> implements Initializable
         });
     }
 
-    public void calcularLambda(ActionEvent actionEvent)
+    public void calcularLambda()
     {
         double lambda = Double.parseDouble(tf_Lambda.getText());
         double media = 1/lambda;
@@ -100,7 +99,7 @@ public class ExponencialController<E> implements Initializable
         tf_Desviacion.setText(String.valueOf(desviacion));
     }
 
-    public void calcularMedia(ActionEvent actionEvent)
+    public void calcularMedia()
     {
         double media = Double.parseDouble(tf_Media.getText());
         double lambda = 1/media;
@@ -112,7 +111,7 @@ public class ExponencialController<E> implements Initializable
         tf_Desviacion.setText(String.valueOf(desviacion));
     }
 
-    public void calcularVarianza(ActionEvent actionEvent)
+    public void calcularVarianza()
     {
         double varianza = Double.parseDouble(tf_Varianza.getText());
         double desviacion = Math.sqrt(varianza);
@@ -124,7 +123,7 @@ public class ExponencialController<E> implements Initializable
         tf_Desviacion.setText(String.valueOf(desviacion));
     }
 
-    public void calcularDesviacion(ActionEvent actionEvent)
+    public void calcularDesviacion()
     {
         double desviacion = Double.parseDouble(tf_Desviacion.getText());
         double varianza = Math.pow(desviacion,2);
@@ -136,7 +135,7 @@ public class ExponencialController<E> implements Initializable
         tf_Varianza.setText(String.valueOf(varianza));
     }
 
-    public void calcular(ActionEvent actionEvent)
+    public void calcular()
     {
         if (tf_muestra.getText().isEmpty())
         {

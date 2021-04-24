@@ -58,7 +58,7 @@ public class mainController implements Initializable
         } else if (mi_Exponensial.equals(str)) {
             fmxl = "Exponencial";
         } else if (mi_Box_Muller.equals(str)) {
-            fmxl = "Bob_Muller";
+            fmxl = "Box_Muller";
         } else if (mi_Convolucion.equals(str)) {
             fmxl = "Convolucion";
         } else if (mi_Poisson.equals(str)) {
@@ -72,7 +72,7 @@ public class mainController implements Initializable
 
     }
 
-    public void salir(ActionEvent actionEvent)
+    public void salir()
     {
         Stage stage = (Stage)btn_Salir.getScene().getWindow();
         stage.close();

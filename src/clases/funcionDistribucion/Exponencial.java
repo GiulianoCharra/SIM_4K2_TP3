@@ -13,7 +13,7 @@ public class Exponencial
     private int muestra;
     private double min;
     private double max;
-    private ObservableList<Intervalo> intervalosEXP = FXCollections.observableArrayList();
+    private final ObservableList<Intervalo> intervalosEXP = FXCollections.observableArrayList();
 
     public Exponencial() {
     }

@@ -2,10 +2,10 @@ package clases.TP1;
 
 public class Generador
 {
-    private int x0; // semilla
-    private int a; // contante multiplicativa
-    private int c;  //contante aditiva -- en el metodo Multiplicativo vale 0, no se usa
-    private int m;  // modulo
+    private final int x0; // semilla
+    private final int a; // contante multiplicativa
+    private final int c;  //contante aditiva -- en el metodo Multiplicativo vale 0, no se usa
+    private final int m;  // modulo
     private float xi; // ultima semilla
 
     public Generador(int x0, int a, int c, int m )

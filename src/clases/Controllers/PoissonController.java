@@ -16,7 +16,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -83,9 +82,7 @@ public class PoissonController implements Initializable
         });
     }
 
-
-
-    public void calcular(ActionEvent actionEvent)
+    public void calcular()
     {
         if (tf_muestra.getText().isEmpty())
         {

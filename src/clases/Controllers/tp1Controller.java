@@ -16,12 +16,9 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
 import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
-
-;
 
 public class tp1Controller implements Initializable {
     public TextField tf_Semilla;
@@ -59,18 +56,18 @@ public class tp1Controller implements Initializable {
     public RadioButton rb_Sistema;
     public RadioButton rb_Multiplicativo_Chi;
 
-    public TableView<Intervalo> tv_Test_Chi;
     public TableView<Numero> tv_NumerosGenerados;
+    public TableColumn<Object, Object> tc_Iteraciones;
+    public TableColumn<Object, Object>  tc_N_Generados;
 
+    public TableView<Intervalo> tv_Test_Chi;
     public TableColumn tv_Intervalos;
-    public TableColumn<Chi_Cuadrado, Integer> tc_Nr_intervalo;
-    public TableColumn<Chi_Cuadrado, Float> tc_menor;
-    public TableColumn<Chi_Cuadrado, Float> tc_Max;
-    public TableColumn<Chi_Cuadrado, Integer> tc_F_Observada;
-    public TableColumn<Chi_Cuadrado, Integer> tc_F_Esperada;
-    public TableColumn<Chi_Cuadrado, Float> tc_Chi;
-    public TableColumn<Numero, Integer> tc_Iteraciones;
-    public TableColumn<Numero, Float> tc_N_Generados;
+    public TableColumn<Object, Object> tc_Nr_intervalo;
+    public TableColumn<Object, Object> tc_menor;
+    public TableColumn<Object, Object> tc_Max;
+    public TableColumn<Object, Object> tc_F_Observada;
+    public TableColumn<Object, Object> tc_F_Esperada;
+    public TableColumn<Object, Object> tc_Chi;
 
     public BarChart<?, ?> bc_Resultados;
 
@@ -78,27 +75,11 @@ public class tp1Controller implements Initializable {
     public AnchorPane ap_Chi_Cuadrado;
     public AnchorPane ap_Generador;
 
-
-    private int x0;
-    private int a;
-    private int c;
-    private int m;
-    private int k;
-    private int g;
-    private Chi_Cuadrado chi;
     private Generador generador;
     private ObservableList<Numero> numeros;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        formatTextFiield(tf_Semilla);
-//        formatTextFiield(tf_A_Multiplicativa);
-//        formatTextFiield(tf_C_Aditiva);
-//        formatTextFiield(tf_Modulo);
-//        formatTextFiield(tf_K_Valor);
-//        formatTextFiield(tf_G_Valor);
-//        formatTextFiield(tf_Semilla);
-//        formatTextFiield(tf_Muestra);
 
         tp1Controller sc = this;
         formatNodes(sc.ap_Base_tp1);
@@ -112,13 +93,6 @@ public class tp1Controller implements Initializable {
         tc_F_Observada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
         tc_F_Esperada.setCellValueFactory(new PropertyValueFactory<>("f_Esp"));
         tc_Chi.setCellValueFactory(new PropertyValueFactory<>("chi"));
-
-
-//        bc_Resultados = new BarChart<>(x,y);
-//
-//        x.setLabel("intervaloExp");
-//        y.setLabel("Cantidad");
-
     }
 
 
@@ -134,6 +108,23 @@ public class tp1Controller implements Initializable {
             formatTextFiield((TextField) node);
         }
 
+    }
+
+    private boolean isEmpty()
+    {
+        if (tf_Semilla.getText().isEmpty() ||
+            tf_A_Multiplicativa.getText().isEmpty() ||
+            tf_C_Aditiva.getText().isEmpty() ||
+            tf_Modulo.getText().isEmpty())
+        {
+            String msg ="Mi buen amigo me temo que usted se ah olvidado de ingresar un dato de vital impotancia, " +
+                "\n" + "el cual es necesario para poder realizar esta actividad, " +
+                "\n" + "seria tan amable de ingresar el dato faltante y asi poder continuar con mi trabajo" +
+                "\n" + "Muchas Gracias\"" ;
+            JOptionPane.showMessageDialog(null, msg, "Falta", JOptionPane.PLAIN_MESSAGE);
+            return true;
+        }
+        return false;
     }
 
     private void formatTextFiield(TextField tf) {
@@ -179,7 +170,9 @@ public class tp1Controller implements Initializable {
         if (tf_A_Multiplicativa.getText().isEmpty())
             return;
 
-        a = Integer.parseInt(tf_A_Multiplicativa.getText());
+        int a = Integer.parseInt(tf_A_Multiplicativa.getText());
+        int k;
+
         if (rb_LinealMixto.isSelected()) {
             k = (a - 1) / 4;
         } else
@@ -190,8 +183,10 @@ public class tp1Controller implements Initializable {
     public void calcular_G() {
         if (tf_Modulo.getText().isEmpty())
             return;
-        m = Integer.parseInt(tf_Modulo.getText());
-        g = (int) (Math.log(m) / Math.log(2));
+
+        int m = Integer.parseInt(tf_Modulo.getText());
+        int g = (int) (Math.log(m) / Math.log(2));
+
         tf_G_Valor.setText(String.valueOf(g));
     }
 
@@ -199,11 +194,14 @@ public class tp1Controller implements Initializable {
         if (tf_K_Valor.getText().isEmpty())
             return;
 
-        k = Integer.parseInt(tf_K_Valor.getText());
+        int k = Integer.parseInt(tf_K_Valor.getText());
+        int a;
+
         if (rb_LinealMixto.isSelected()) {
             a = 1 + 4 * k;
         } else
             a = 3 + 8 * k;
+
         tf_A_Multiplicativa.setText(String.valueOf(a));
     }
 
@@ -211,17 +209,26 @@ public class tp1Controller implements Initializable {
         if (tf_G_Valor.getText().isEmpty())
             return;
 
-        g = Integer.parseInt(tf_G_Valor.getText());
-        m = (int) Math.pow(2, g);
+        int g = Integer.parseInt(tf_G_Valor.getText());
+        int m = (int) Math.pow(2, g);
+
         tf_Modulo.setText(String.valueOf(m));
     }
 
     public void generarNumeros() {
+
+        if (isEmpty())
+            return;
+
         numeros = FXCollections.observableArrayList();
 
-        x0 = (int) Float.parseFloat(tf_Semilla.getText());
-        c = (int) Float.parseFloat(tf_C_Aditiva.getText());
+        int x0 = (int) Float.parseFloat(tf_Semilla.getText());
+        int a = (int) Float.parseFloat(tf_A_Multiplicativa.getText());
+        int c = (int) Float.parseFloat(tf_C_Aditiva.getText());
+        int m = (int) Float.parseFloat(tf_Modulo.getText());
+
         float num;
+
 
         generador = new Generador(x0, a, c, m);
 
@@ -263,7 +270,7 @@ public class tp1Controller implements Initializable {
         int numInter = Integer.parseInt(((RadioButton) tg_SubIntervalos.getSelectedToggle()).getText());
 
 
-        chi = new Chi_Cuadrado(muestra, numInter);
+        Chi_Cuadrado chi = new Chi_Cuadrado(muestra, numInter);
         float[] vecMuestra = new float[muestra];
 
         if (rb_Sistema.isSelected()) {
