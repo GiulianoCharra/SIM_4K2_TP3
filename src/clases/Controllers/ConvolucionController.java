@@ -11,6 +11,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -86,6 +87,9 @@ public class ConvolucionController implements Initializable
 
     public void calcularVarianza()
     {
+        if (tf_Varianza.getText().isEmpty())
+            return;
+
         double varianza = Double.parseDouble(tf_Varianza.getText());
         double desviacion = Math.sqrt(varianza);
 
@@ -94,6 +98,9 @@ public class ConvolucionController implements Initializable
 
     public void calcularDesviacion()
     {
+        if (tf_Desviacion.getText().isEmpty())
+            return;
+
         double desviacion = Double.parseDouble(tf_Desviacion.getText());
         double varianza = Math.pow(desviacion,2);
 
@@ -103,9 +110,9 @@ public class ConvolucionController implements Initializable
 
     public void calcular(ActionEvent actionEvent)
     {
-        if (tf_muestra.getText().isEmpty())
+        if (tf_muestra.getText().isEmpty() || tf_Media.getText().isEmpty() || tf_Desviacion.getText().isEmpty())
         {
-            JOptionPane.showMessageDialog(null,"No imgreso la muestra","Olvidaste ingresar algo",JOptionPane.PLAIN_MESSAGE);
+            JOptionPane.showMessageDialog(null,"Porfavor ingree todos los datos necesarios ","Olvidaste ingresar algo",JOptionPane.PLAIN_MESSAGE);
             return;
         }
 
@@ -117,7 +124,7 @@ public class ConvolucionController implements Initializable
 
         Normal conv = new Normal();
 
-        double[] vec = conv.box_Muller(media, desviacion, muestra);
+        double[] vec = conv.convolucion(media, desviacion, muestra);
 
         int i = 0;
         for (double num: vec)
@@ -129,11 +136,11 @@ public class ConvolucionController implements Initializable
         RadioButton rb =(RadioButton) tg_intervalo.getSelectedToggle();
         int cant = Integer.parseInt(rb.getText());
 
-        ObservableList<Intervalo> chi = conv.calcularChi(cant,vec);
+        ObservableList<Intervalo> chi = conv.calcularChi(cant);
 
         tv_Numeros.setItems(numeros);
-       /* tv_Distribuccion.setItems(chi);
 
+        tv_Distribuccion.setItems(chi);
 
 
         XYChart.Series<Integer,Float> frecO = new XYChart.Series<>();
@@ -143,7 +150,7 @@ public class ConvolucionController implements Initializable
         frecO.setName("Obserbada");
 
         int j = 0;
-        for (Intervalo n: conv.getIntervalosEXP())
+        for (Intervalo n: conv.getIntervalosNormal())
         {
             frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
             frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
@@ -151,6 +158,6 @@ public class ConvolucionController implements Initializable
         }
 
         lc_Distribucion.getData().clear();
-        lc_Distribucion.getData().addAll(frecO, frecE);*/
+        lc_Distribucion.getData().addAll(frecO, frecE);
     }
 }

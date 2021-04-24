@@ -23,7 +23,7 @@
       </rowConstraints>
       <TableView fx:id="tv_NumerosGenerados" pickOnBounds="false" prefHeight="364.0" prefWidth="347.0" style="-fx-border-style: solid;">
          <placeholder>
-            <Label text="No se ah generado ningun numero, aun ;)" />
+            <Label text="Estoy vacio" />
          </placeholder>
          <columns>
             <TableColumn fx:id="tc_Iteraciones" editable="false" prefWidth="90.0" sortable="false" text="Iteraciones ( I )" />
@@ -49,7 +49,7 @@
       </BarChart>
       <TableView fx:id="tv_Test_Chi" prefHeight="405.0" prefWidth="459.0" style="-fx-border-style: solid;" GridPane.columnIndex="1">
          <placeholder>
-            <Label text="No se ah generado ningun numero, aun ;)" />
+            <Label text="Tengo la panza vacia" />
          </placeholder>
          <columns>
             <TableColumn fx:id="tv_Intervalos" editable="false" maxWidth="500.0" prefWidth="207.0" sortable="false" text="Intervalos">

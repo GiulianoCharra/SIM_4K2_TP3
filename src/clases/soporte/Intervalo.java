@@ -12,6 +12,11 @@ public class Intervalo
     public Intervalo() {
     }
 
+    public Intervalo(int numIt)
+    {
+        this.numIt = numIt;
+    }
+
     public Intervalo(int num, float inferior, float superior)
     {
         this.numIt = num;
@@ -19,6 +24,22 @@ public class Intervalo
         this.superior = superior;
         this.f_Obs = 0;
         this.f_Esp = 0;
+    }
+
+    public Intervalo(int numIt, float inferior, float superior, float f_Esp) {
+        this.numIt = numIt;
+        this.inferior = inferior;
+        this.superior = superior;
+        this.f_Esp = f_Esp;
+    }
+
+    public Intervalo(int numIt, float inferior, float superior, int f_Obs, float f_Esp, float chi) {
+        this.numIt = numIt;
+        this.inferior = inferior;
+        this.superior = superior;
+        this.f_Obs = f_Obs;
+        this.f_Esp = f_Esp;
+        this.chi = chi;
     }
 
     public int getNumIt() {

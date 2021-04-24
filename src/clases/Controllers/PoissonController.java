@@ -2,6 +2,7 @@ package clases.Controllers;
 
 import clases.TP1.Numero;
 import clases.funcionDistribucion.Poisson;
+import clases.soporte.Intervalo;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -9,10 +10,9 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -27,11 +27,18 @@ public class PoissonController implements Initializable
     public Button bt_Calcular;
     public TextField tf_muestra;
     public TextField tf_Lambda;
-    public TableView tv_Distribuccion;
-    public TableColumn<Numero, Float> tc_Numeros;
-    public TableColumn tc_F_Obserbada;
-    public TableColumn tc_F_Esperada;
-    public TableColumn tc_Chi;
+
+    public TableView<Numero> tv_Numeros;
+    public TableColumn<Numero, Integer> tc_Numeros;
+
+    public TableView<Intervalo> tv_Distribuccion;
+    public TableColumn<Object,Object>  tc_Desde;
+    public TableColumn<Object,Object>  tc_Hasta;
+    public TableColumn<Object,Object>  tc_F_Obserbada;
+    public TableColumn<Object,Object>  tc_F_Esperada;
+    public TableColumn<Object,Object>  tc_Chi;
+
+    public LineChart lc_Distribucion;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -41,6 +48,12 @@ public class PoissonController implements Initializable
 
 
         tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
+
+        tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
+        tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));
+        tc_F_Obserbada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
+        tc_F_Esperada.setCellValueFactory(new PropertyValueFactory<>("f_Esp"));
+        tc_Chi.setCellValueFactory(new PropertyValueFactory<>("chi"));
     }
 
     public void formatNodes(Node node) {
@@ -70,6 +83,8 @@ public class PoissonController implements Initializable
         });
     }
 
+
+
     public void calcular(ActionEvent actionEvent)
     {
         if (tf_muestra.getText().isEmpty())
@@ -83,7 +98,8 @@ public class PoissonController implements Initializable
 
         ObservableList<Numero> numeros = FXCollections.observableArrayList();
 
-        int[] vec = Poisson.generar(lambda, muestra);
+        Poisson poisson = new Poisson();
+        int[] vec = poisson.generar(lambda,muestra);
 
         int i = 0;
         for (int num: vec)
@@ -91,6 +107,27 @@ public class PoissonController implements Initializable
             numeros.add(new Numero(i,num));
         }
 
-        tv_Distribuccion.setItems(numeros);
+
+        tv_Numeros.setItems(numeros);
+        ObservableList<Intervalo> chi = poisson.calcularChi();
+        tv_Distribuccion.setItems(chi);
+
+
+        XYChart.Series<Integer,Float> frecO = new XYChart.Series<>();
+        XYChart.Series<Integer,Float> frecE = new XYChart.Series<>();
+
+        frecE.setName("Esperada");
+        frecO.setName("Obserbada");
+
+        int j = 0;
+        for (Intervalo n: poisson.getIntervalosPoisson())
+        {
+            frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
+            frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
+            j++;
+        }
+
+        lc_Distribucion.getData().clear();
+        lc_Distribucion.getData().addAll(frecO, frecE);
     }
 }

@@ -1,14 +1,14 @@
 package clases.TP1;
 
-public class Numero {
+public class Numero<E>{
     private int iteracion;
-    private float numRand;
+    private E numRand;
 
     public Numero()
     {
     }
 
-    public Numero(int iteracion, float numRand)
+    public Numero(int iteracion, E numRand)
     {
         this.iteracion = iteracion;
         this.numRand = numRand;
@@ -23,11 +23,11 @@ public class Numero {
         this.iteracion = iteracion;
     }
 
-    public float getNumRand() {
+    public E getNumRand() {
         return numRand;
     }
 
-    public void setNumRand(float numRand) {
+    public void setNumRand(E numRand) {
         this.numRand = numRand;
     }
 

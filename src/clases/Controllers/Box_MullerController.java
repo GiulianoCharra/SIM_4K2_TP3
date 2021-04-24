@@ -82,6 +82,7 @@ public class Box_MullerController implements Initializable
                 if (!num.matches("\\d*([.]\\d{0,16})?")) {
                     tf.setText(num.replaceAll("[^\\d]", ""));
                 }
+
             }
 
         });
@@ -90,16 +91,20 @@ public class Box_MullerController implements Initializable
 
     public void calcularVarianza()
     {
+        if (tf_Varianza.getText().isEmpty())
+            return;
+
         double varianza = Double.parseDouble(tf_Varianza.getText());
         double desviacion = (double) Math.round( Math.sqrt(varianza)*10000)/10000;
-
-
 
         tf_Desviacion.setText(String.valueOf(desviacion));
     }
 
     public void calcularDesviacion()
     {
+        if (tf_Desviacion.getText().isEmpty())
+            return;
+
         double desviacion = Double.parseDouble(tf_Desviacion.getText());
         double varianza =(double)Math.round( Math.pow(desviacion,2)*10000)/10000;
 
@@ -135,11 +140,11 @@ public class Box_MullerController implements Initializable
         RadioButton rb =(RadioButton) tg_intervalo.getSelectedToggle();
         int cant = Integer.parseInt(rb.getText());
 
-        ObservableList<Intervalo> chi = box.calcularChi(cant,vec);
+
+        ObservableList<Intervalo> chi = box.calcularChi(cant);
 
         tv_Numeros.setItems(numeros);
-       /* tv_Distribuccion.setItems(chi);
-
+        tv_Distribuccion.setItems(chi);
 
 
         XYChart.Series<Integer,Float> frecO = new XYChart.Series<>();
@@ -149,7 +154,7 @@ public class Box_MullerController implements Initializable
         frecO.setName("Obserbada");
 
         int j = 0;
-        for (Intervalo n: box.getIntervalosEXP())
+        for (Intervalo n: box.getIntervalosNormal())
         {
             frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
             frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
@@ -157,6 +162,6 @@ public class Box_MullerController implements Initializable
         }
 
         lc_Distribucion.getData().clear();
-        lc_Distribucion.getData().addAll(frecO, frecE);*/
+        lc_Distribucion.getData().addAll(frecO, frecE);
     }
 }

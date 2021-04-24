@@ -135,7 +135,7 @@ public class Exponencial
         }
     }
 
-    public void  calcIntervalos(int cantIntervalos, double[] vecE)
+    public void  calcIntervalos(int cantIntervalos)
     {
 
         double dif = max - min;
@@ -227,7 +227,7 @@ public class Exponencial
 
     public ObservableList<Intervalo> calcularChi(int cantIntervalos, double[] vecE)
     {
-        calcIntervalos(cantIntervalos, vecE);
+        calcIntervalos(cantIntervalos);
         calcularF_Observada();
         probabilidadAcumulada(vecE.length);
 

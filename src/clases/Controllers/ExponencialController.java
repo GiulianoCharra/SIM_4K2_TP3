@@ -21,7 +21,7 @@ import javax.swing.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class ExponencialController implements Initializable
+public class ExponencialController<E> implements Initializable
 {
     public AnchorPane ap_base;
     public Button bt_Calcular;
@@ -34,10 +34,10 @@ public class ExponencialController implements Initializable
     public ToggleGroup tg_intervalo;
 
 
-    public TableView tv_Numeros;
-    public TableColumn<Numero,Float> tc_Numeros;
+    public TableView<Numero> tv_Numeros;
+    public TableColumn<Integer,Float> tc_Numeros;
 
-    public TableView tv_Distribuccion;
+    public TableView<Intervalo> tv_Distribuccion;
     public TableColumn<Object, Object> tc_Hasta;
     public TableColumn<Object, Object> tc_Desde;
     public TableColumn<Object, Object> tc_F_Obserbada;
@@ -48,11 +48,10 @@ public class ExponencialController implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
     {
-        ExponencialController cn  = this;
+        ExponencialController<E> cn  = this;
         formatNodes(cn.ap_base);
 
         tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
-
 
         tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
         tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));

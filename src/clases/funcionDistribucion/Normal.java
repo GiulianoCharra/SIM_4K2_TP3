@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.rmi.MarshalException;
+import java.util.Arrays;
 
 public class Normal
 {
@@ -18,7 +19,8 @@ public class Normal
     private double max;
     private ObservableList<Intervalo> intervalosNormal = FXCollections.observableArrayList();
 
-    public Normal() {
+    public Normal()
+    {
 
     }
 
@@ -74,12 +76,14 @@ public class Normal
      */
     public double[] box_Muller(double media, double desviacion, int muestra)
     {
+        this.media = media;
+        this.desviacion = desviacion;
 
         System.out.println("PRIMERA PARTE \n genera lo random");
 
         System.out.println("Primera muestra: " + muestra);
-        if (muestra % 2 == 1)
-        {   this.muestra = muestra;
+        if (muestra % 2 != 0)
+        {
             muestra += 1;
         }
         System.out.println("Nueva muestra: " + muestra);
@@ -96,21 +100,47 @@ public class Normal
 
     public double[] box_Muller(double media, double desviacion,double[] numeros)
     {
+        this.media = media;
+        this.desviacion = desviacion;
         return generadorBox_Muller(media, desviacion, numeros);
     }
 
 
     private double[] generadorBox_Muller(double media, double desviacion, double[] numeros)
     {
-        int tam = numeros.length;
-        double[ ]normal = new double[tam];
+        this.muestra = numeros.length;
+        this.media = media;
+        this.desviacion = desviacion;
+
+        normal = new double[muestra];
+
+        double numMenor;
+        double numMayor;
+        double num1;
+        double num2;
+
+        this.min = normal[0] = ((Math.sqrt(-2 * Math.log(numeros[0])) * Math.cos(2 * Math.PI * numeros[1])) * desviacion + media);;
+        this.max = min;
+
         System.out.println("Segunda PARTE \n hace la cosa esta");
-        for (int i = 0; i < tam; i+=2)
-        {
-            normal[i] = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.cos(2 * Math.PI * numeros[i+1])) * desviacion + media);
-            normal[i+1] = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.sin(2 * Math.PI * numeros[i+1])) * desviacion + media);
+
+        for (int i = 0; i < muestra; i+=2) {
+            num1 = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.cos(2 * Math.PI * numeros[i + 1])) * desviacion + media);
+            num2 = ((Math.sqrt(-2 * Math.log(numeros[i])) * Math.sin(2 * Math.PI * numeros[i + 1])) * desviacion + media);
+
+            normal[i] = num1;
+            normal[i + 1] = num2;
+
+            numMenor = Math.min(num1, num2);
+            numMayor = Math.max(num1, num2);
+
+            if (numMenor < min)
+                min = numMenor;
+            else {
+                if (numMayor > max)
+                    max = numMayor + 0.0001;
+            }
         }
-        System.out.println(tam);
         return normal;
     }
 
@@ -148,12 +178,15 @@ public class Normal
 
     private double[] generaradorConvulcion(double media, double desviacion, double[] numeros)
     {
-        int tam = numeros.length/12;
+        this.muestra = numeros.length/12;
 
-        this.normal = new double[tam];
+        this.normal = new double[muestra];
 
         double sum = 0;
         int cont = 1;
+        double num;
+        this.min = 100000;
+        this.max = -100000;
 
         System.out.println("\nSegunda PARTE \n hace la cosa esta\n");
 
@@ -162,10 +195,21 @@ public class Normal
         {
             if (cont == 12)
             {
-                normal[pos] = (sum - 6) * desviacion + media;
+                num = (sum - 6) * desviacion + media;
+                normal[pos] = num;
+                System.out.println("\nnumero "+ pos + " : "+ num);
                 sum = 0;
                 cont = 0;
                 pos++;
+
+                if (num < min)
+                    min = num;
+                else {
+                    if (num > max)
+                        max = num + 0.0001;
+                }
+
+                System.out.println("\nmin: " + min + "\tmax:" + max);
             }
             sum += numero;
             cont++;
@@ -175,6 +219,7 @@ public class Normal
 
     private void calcularF_Observada()
     {
+        System.out.println((normal));
         for (double n: normal)
         {
             for (Intervalo i: intervalosNormal)
@@ -192,7 +237,7 @@ public class Normal
         }
     }
 
-    public void  calcIntervalos(int cantIntervalos, double[] vecE)
+    public void  calcIntervalos(int cantIntervalos)
     {
 
         double dif = max - min;
@@ -215,10 +260,11 @@ public class Normal
         double p ;
         for (Intervalo ie: intervalosNormal)
         {
+            p = (Math.pow(Math.E,(-0.5*(Math.pow((((ie.getInferior()+ ie.getSuperior())/2)-media),2))))/(desviacion * Math.sqrt(2*Math.PI)))*(ie.getSuperior()-ie.getInferior());
 
-            p = (Math.pow(Math.E,(-0.5*(Math.pow((((ie.getInferior()+ ie.getSuperior())/2)-media),2))))/(desviacion * Math.sqrt(2*Math.PI)))*(ie.getSuperior()-ie.getInferior());                                                                                                ;
+            System.out.println(p);
             ie.setF_Esp((float)Math.round((p * tam)*10000)/10000);
-            System.out.println("\n frecuencia esperada: " + ie);
+            System.out.println("frecuencia esperada: " + ie);
         }
 
     }
@@ -283,11 +329,11 @@ public class Normal
         return tablaChi;
     }
 
-    public ObservableList<Intervalo> calcularChi(int cantIntervalos, double[] vecE)
+    public ObservableList<Intervalo> calcularChi(int cantIntervalos)
     {
-        calcIntervalos(cantIntervalos, vecE);
+        calcIntervalos(cantIntervalos);
         calcularF_Observada();
-        probabilidad(vecE.length);
+        probabilidad(muestra);
 
         float sum = 0;
         int fO;

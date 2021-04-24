@@ -9,26 +9,31 @@ public class mainPrueba {
 
     public static void main(String[] args)
     {
+/*
 
-//        Chi_Cuadrado chi = new Chi_Cuadrado(10,100,"Sistema");
-//        chi.calcularChi();
-//        chi.mostrar();
-        double[] vec = null;
-
+        Chi_Cuadrado chi = new Chi_Cuadrado(10,100,"Sistema");
+        chi.calcularChi();
+        chi.mostrar();
+*/
+        int[] vec = null;
+//
 //        vec= Uniforme.generar(5,8,100);
 //      vec= Exponencial.generar(5,100);
 //        vec= Normal.box_Muller(-2,0.2,50);
 //        vec= Normal.convolucion(-2,0.2,100);
-//        vec = new double[100];
-//        for (int i = 0; i < 100; i++) {
-//            vec[i] = Poisson.generar(10);
-//        }
+        Poisson poisson = new Poisson();
+
+        System.out.println(poisson.factorial(19));
+
+        vec = poisson.generar(15,50);
 
         StringBuilder str = new StringBuilder();
-        for (double n: vec)
+        for (int n: vec)
         {
             str.append(String.valueOf(n).replace('.',',')).append("\n");
         }
         System.out.println(str.toString());
+
+        poisson.calcularChi();
     }
 }
