@@ -74,7 +74,7 @@
         <TableView fx:id="tv_Distribuccion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
                    prefHeight="883.0" prefWidth="759.0" GridPane.columnIndex="1">
             <placeholder>
-                <Label text="Se burlaban diciendome Bob la Mula, me vengue creando esta distribucion"/>
+                <Label fx:id="lbl_TVDistribucion" text="Se burlaban diciendome Bob la Mula, me vengue creando esta distribucion"/>
             </placeholder>
             <columnResizePolicy>
                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY"/>

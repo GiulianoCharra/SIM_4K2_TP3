@@ -107,6 +107,10 @@ public class UniformeController implements Initializable
         float A = Float.parseFloat(tf_A.getText());
         float B = Float.parseFloat(tf_B.getText());
 
+        if (A<=B)
+        {
+            JOptionPane.showMessageDialog(null,"A tiene que ser menor a B","Todo mal amigo",JOptionPane.PLAIN_MESSAGE);
+        }
         ObservableList<Numero<Float>> numeros = FXCollections.observableArrayList();
 
         Uniforme uniforme = new Uniforme();

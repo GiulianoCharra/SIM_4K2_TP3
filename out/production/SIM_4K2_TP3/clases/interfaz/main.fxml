@@ -35,7 +35,7 @@
       </MenuBar>
       <BorderPane fx:id="bp_Vista" layoutX="31.0" layoutY="95.0" prefHeight="651.0" prefWidth="1219.0" style="-fx-border-color: black; -fx-border-radius: 20;" AnchorPane.bottomAnchor="54.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="95.0">
          <center>
-            <Label text="Bienvenido a Simulacion" BorderPane.alignment="CENTER">
+            <Label text="Bienvenido a Simulación" BorderPane.alignment="CENTER">
                <font>
                   <Font name="Book Antiqua" size="69.0" />
                </font>

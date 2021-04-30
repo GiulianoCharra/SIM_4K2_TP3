@@ -42,6 +42,7 @@ public class Box_MullerController implements Initializable
     public TableColumn<Object, Object> tc_Chi;
 
     public LineChart lc_Distribucion;
+    public Label lbl_TVDistribucion;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle)
@@ -151,6 +152,7 @@ public class Box_MullerController implements Initializable
 
 
         ObservableList<Intervalo> chi = box.calcularChi(cant);
+
 
         tv_Numeros.setItems(numeros);
         tv_Distribuccion.setItems(chi);
