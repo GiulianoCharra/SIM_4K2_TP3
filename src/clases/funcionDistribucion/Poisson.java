@@ -258,7 +258,7 @@ public class Poisson
         float fE;
 
         ObservableList<Intervalo> tablaChi = crearTablaChi();
-
+        System.out.println("\n-----SE crea la tabla Final de Chi-------\n");
         for (Intervalo chi: tablaChi)
         {
             fO = chi.getF_Obs();

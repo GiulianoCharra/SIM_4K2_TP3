@@ -159,6 +159,7 @@ public class Exponencial
         for (Intervalo ie: intervalosEXP)
         {
             Pac = 1-Math.pow(Math.E,(-lambda*ie.getSuperior()))-(1-Math.pow(Math.E,(-lambda*ie.getInferior())))                                                                                                ;
+
             ie.setF_Esp((float)Math.round((Pac * tam)*10000)/10000);
             System.out.println("\n frecuencia esperada: " + ie);
         }
@@ -240,6 +241,7 @@ public class Exponencial
         float fE;
 
         ObservableList<Intervalo> tablaChi = crearTablaChi();
+        System.out.println("\n-----SE crea la tabla Final de Chi-------\n");
 
         for (Intervalo chi: tablaChi)
         {

@@ -117,6 +117,7 @@ public class Chi_Cuadrado
         calcIntervalos();
         f_Esperada();
         f_Observada(numeros);
+
         float sum = 0;
         int fO;
         float fE;

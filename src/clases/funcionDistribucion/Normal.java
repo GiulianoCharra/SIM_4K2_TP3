@@ -271,8 +271,60 @@ public class Normal
 
     }
 
-
     public ObservableList<Intervalo> crearTablaChi()
+    {
+        System.out.println("\n----Aca se crea la table de Chi agrupando filas si la FE en menor a 5------\n");
+
+        ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
+        Intervalo aux = null;
+
+        boolean ban = false;
+
+        for (Intervalo ie: intervalosNormal)
+        {
+            System.out.println(ie);
+            if (!ban)
+            {
+                if (ie.getF_Esp()>= 5)
+                {
+                    tablaChi.add(new Intervalo(ie));
+                }
+                else
+                {
+                    aux = new Intervalo(ie);
+                    ban = true;
+                }
+            }
+            else
+            {
+                float sup = ie.getSuperior();
+                int fO = ie.getF_Obs();
+                float fE = ie.getF_Esp();
+                aux.setSuperior(sup);
+                aux.setF_Obs(aux.getF_Obs() + fO);
+                aux.setF_Esp(aux.getF_Esp() + fE);
+
+                if (aux.getF_Esp()>= 5)
+                {
+                    tablaChi.add(aux);
+                    aux = null;
+                    ban = false;
+                }
+            }
+        }
+
+
+        if (aux != null)
+        {
+            Intervalo last = tablaChi.get(tablaChi.size() - 1);
+            last.setSuperior(aux.getSuperior());
+            last.setF_Obs(last.getF_Obs() + aux.getF_Obs());
+            last.setF_Esp(last.getF_Esp() + aux.getF_Esp());
+        }
+
+        return tablaChi;
+    }
+/*    public ObservableList<Intervalo> crearTablaChi()
     {
         System.out.println("\nAca se crea la table de Chi agrupando filas si la FE en menor a 5\n");
 
@@ -337,7 +389,7 @@ public class Normal
         }
 
         return tablaChi;
-    }
+    }*/
 
     public ObservableList<Intervalo> calcularChi(int cantIntervalos)
     {
@@ -350,7 +402,7 @@ public class Normal
         float fE;
 
         ObservableList<Intervalo> tablaChi = crearTablaChi();
-        System.out.println("\n");
+        System.out.println("\n-----SE crea la tabla Final de Chi-------\n");
         for (Intervalo chi: tablaChi)
         {
             fO = chi.getF_Obs();

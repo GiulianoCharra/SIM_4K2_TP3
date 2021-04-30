@@ -216,6 +216,7 @@ public class Uniforme
         float fE;
 
         ObservableList<Intervalo> tablaChi = crearTablaChi();
+        System.out.println("\n-----SE crea la tabla Final de Chi-------\n");
 
         for (Intervalo chi: tablaChi)
         {
