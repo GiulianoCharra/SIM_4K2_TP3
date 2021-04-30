@@ -49,13 +49,8 @@ public class Chi_Cuadrado
         {
             for (Intervalo i: intervalos)
             {
-                /*System.out.println("Inf: " + i.getInferior()+
-                                    " Sup: " + i.getSuperior()+
-                                    " N°: " + n);
-                */
                 if (n>= i.getInferior() && n<= i.getSuperior())
                 {
-                    //System.out.println("aceptado");
                     i.contar();
                     break;
                 }
@@ -63,7 +58,61 @@ public class Chi_Cuadrado
         }
     }
 
-    public void calcularChi(float[] numeros)
+    public ObservableList<Intervalo> crearTablaChi()
+    {
+        System.out.println("\n----Aca se crea la table de Chi agrupando filas si la FE en menor a 5------\n");
+
+        ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
+        Intervalo aux = null;
+
+        boolean ban = false;
+
+        for (Intervalo ie: intervalos)
+        {
+            System.out.println(ie);
+            if (!ban)
+            {
+                if (ie.getF_Esp()>= 5)
+                {
+                    tablaChi.add(new Intervalo(ie));
+                }
+                else
+                {
+                    aux = new Intervalo(ie);
+                    ban = true;
+                }
+            }
+            else
+            {
+                float sup = ie.getSuperior();
+                int fO = ie.getF_Obs();
+                float fE = ie.getF_Esp();
+                aux.setSuperior(sup);
+                aux.setF_Obs(aux.getF_Obs() + fO);
+                aux.setF_Esp(aux.getF_Esp() + fE);
+
+                if (aux.getF_Esp()>= 5)
+                {
+                    tablaChi.add(aux);
+                    aux = null;
+                    ban = false;
+                }
+            }
+        }
+
+
+        if (aux != null)
+        {
+            Intervalo last = tablaChi.get(tablaChi.size() - 1);
+            last.setSuperior(aux.getSuperior());
+            last.setF_Obs(last.getF_Obs() + aux.getF_Obs());
+            last.setF_Esp(last.getF_Esp() + aux.getF_Esp());
+        }
+
+        return tablaChi;
+    }
+
+    public ObservableList<Intervalo> calcularChi(float[] numeros)
     {
         calcIntervalos();
         f_Esperada();
@@ -72,15 +121,20 @@ public class Chi_Cuadrado
         int fO;
         float fE;
 
-        for (Intervalo n: intervalos)
+        ObservableList<Intervalo> tablaChi = crearTablaChi();
+
+        System.out.println("\n-----SE crea la tabla Final de Chi-------\n");
+        for (Intervalo n: tablaChi)
         {
             fO = n.getF_Obs();
             fE = n.getF_Esp();
             float v = (float) (Math.pow((fO - fE), 2) / fE);
+            System.out.println(n);
             //System.out.println("fObse:" +fO+ " fEsp: " + fE+" nuevo: " + sum + "+"+ v + "= " + ((sum+v)) );
             sum += v;
             n.setChi((float)Math.round(sum*1000)/1000);
         }
+        return tablaChi;
     }
 
     public void mostrar()
@@ -96,87 +150,4 @@ public class Chi_Cuadrado
         return intervalos;
     }
 
-    /*public static class Intervalo
-    {
-        private int numIt;
-        private float inferior;
-        private float superior;
-        private int f_Obs;
-        private int f_Esp;
-        private float chi;
-
-        public Intervalo(int num, float inferior, float superior)
-        {
-            this.numIt = num;
-            this.inferior = inferior;
-            this.superior = superior;
-            this.f_Obs = 0;
-            this.f_Esp = 0;
-        }
-
-        public int getNumIt() {
-            return numIt;
-        }
-
-        public void setNumIt(int numIt) {
-            this.numIt = numIt;
-        }
-
-        public float getInferior() {
-            return inferior;
-        }
-
-        public void setInferior(float inferior) {
-            this.inferior = inferior;
-        }
-
-        public float getSuperior() {
-            return superior;
-        }
-
-        public void setSuperior(float superior) {
-            this.superior = superior;
-        }
-
-        public int getF_Obs() {
-            return f_Obs;
-        }
-
-        public void setF_Obs(int f_Obs) {
-            this.f_Obs = f_Obs;
-        }
-
-        public int getF_Esp() {
-            return f_Esp;
-        }
-
-        public void setF_Esp(int f_Esp) {
-            this.f_Esp = f_Esp;
-        }
-
-        public float getChi() {
-            return chi;
-        }
-
-        public void setChi(float chi) {
-            this.chi = chi;
-        }
-
-        public void contar()
-        {
-            f_Obs++;
-        }
-
-        @Override
-        public String toString() {
-            return "intervaloExp{" +
-                    "num=" + numIt +
-                    ", inferior=" + inferior +
-                    ", superior=" + superior +
-                    ", f_Obs=" + f_Obs +
-                    ", f_Esp=" + f_Esp +
-                    ", chi=" + chi +
-                    '}';
-        }
-    }*/
 }

@@ -22,7 +22,6 @@ import java.util.ResourceBundle;
 
 public class Box_MullerController implements Initializable
 {
-
     public AnchorPane ap_base;
     public Button bt_Calcular;
     public TextField tf_muestra;
@@ -33,14 +32,15 @@ public class Box_MullerController implements Initializable
     public ToggleGroup tg_intervalo;
 
     public TableView<Numero> tv_Numeros;
-    public TableColumn<Object,Object> tc_Numeros;
+    public TableColumn<Object, Object> tc_Numeros;
 
     public TableView<Intervalo> tv_Distribuccion;
-    public TableColumn<Object, Object> tc_F_Esperada;
-    public TableColumn<Object, Object> tc_Chi;
-    public TableColumn<Object, Object> tc_F_Obserbada;
     public TableColumn<Object, Object> tc_Desde;
     public TableColumn<Object, Object> tc_Hasta;
+    public TableColumn<Object, Object> tc_F_Obserbada;
+    public TableColumn<Object, Object> tc_F_Esperada;
+    public TableColumn<Object, Object> tc_Chi;
+
     public LineChart lc_Distribucion;
 
     @Override
@@ -75,10 +75,22 @@ public class Box_MullerController implements Initializable
     {
         tf.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue observableValue, String o, String num) {
-                if (!num.matches("\\d*([.]\\d{0,16})?")) {
-                    tf.setText(num.replaceAll("[^\\d]", ""));
+            public void changed(ObservableValue observableValue, String o, String num)
+            {
+
+                if (!num.matches("^(-|\\d)(\\d)*([.]\\d{0,4})?"))
+                {
+                    if (!tf.getText().isEmpty())
+                    {
+                        char[] str = num.toCharArray();
+                        str[str.length - 1] = '\0';
+                        tf.setText(String.valueOf(str));
+                    }
                 }
+
+//                if (!num.matches("\\d*([.]\\d{0,16})?")) {
+//                    tf.setText(num.replaceAll("[^\\d]", ""));
+//                }
 
             }
 
@@ -149,10 +161,11 @@ public class Box_MullerController implements Initializable
 
         frecE.setName("Esperada");
         frecO.setName("Obserbada");
-
+        System.out.println("\n------Lo que se carga en la Tabla-----\n");
         int j = 0;
         for (Intervalo n: box.getIntervalosNormal())
         {
+            System.out.println("Intevalo " + j +": " + n);
             frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
             frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
             j++;

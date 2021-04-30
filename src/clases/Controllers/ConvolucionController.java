@@ -23,24 +23,24 @@ import java.util.ResourceBundle;
 
 public class ConvolucionController implements Initializable
 {
-
     public AnchorPane ap_base;
     public Button bt_Calcular;
     public TextField tf_muestra;
-    public ToggleGroup tg_intervalo;
     public TextField tf_Media;
     public TextField tf_Varianza;
     public TextField tf_Desviacion;
 
-    public TableView tv_Numeros;
-    public TableColumn<Numero,Float> tc_Numeros;
+    public ToggleGroup tg_intervalo;
 
-    public TableView tv_Distribuccion;
-    public TableColumn<Object, Object>  tc_Chi;
+    public TableView<Numero> tv_Numeros;
+    public TableColumn<Object, Object> tc_Numeros;
+
+    public TableView<Intervalo> tv_Distribuccion;
     public TableColumn<Object, Object>  tc_Desde;
     public TableColumn<Object, Object>  tc_Hasta;
     public TableColumn<Object, Object>  tc_F_Obserbada;
     public TableColumn<Object, Object>  tc_F_Esperada;
+    public TableColumn<Object, Object>  tc_Chi;
 
     public LineChart lc_Distribucion;
 
@@ -51,7 +51,7 @@ public class ConvolucionController implements Initializable
         formatNodes(cn.ap_base);
 
 
-        tc_Numeros.setCellValueFactory(new PropertyValueFactory<Numero,Float>("numRand"));
+        tc_Numeros.setCellValueFactory(new PropertyValueFactory<>("numRand"));
         tc_Desde.setCellValueFactory(new PropertyValueFactory<>("inferior"));
         tc_Hasta.setCellValueFactory(new PropertyValueFactory<>("superior"));
         tc_F_Obserbada.setCellValueFactory(new PropertyValueFactory<>("f_Obs"));
@@ -76,10 +76,21 @@ public class ConvolucionController implements Initializable
     {
         tf.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue observableValue, String o, String num) {
-                if (!num.matches("\\d*([.]\\d{0,16})?")) {
-                    tf.setText(num.replaceAll("[^\\d]", ""));
+            public void changed(ObservableValue observableValue, String o, String num)
+            {
+                if (!num.matches("^(-|\\d)(\\d)*([.]\\d{0,4})?"))
+                {
+                    if (!tf.getText().isEmpty())
+                    {
+                        char[] str = num.toCharArray();
+                        str[str.length - 1] = '\0';
+                        tf.setText(String.valueOf(str));
+                    }
                 }
+
+//                if (!num.matches("\\d*([.]\\d{0,16})?")) {
+//                    tf.setText(num.replaceAll("[^\\d]", ""));
+//                }
             }
 
         });
@@ -148,7 +159,7 @@ public class ConvolucionController implements Initializable
 
         frecE.setName("Esperada");
         frecO.setName("Obserbada");
-
+        System.out.println("\n------Lo que se carga en la Tabla-----\n");
         int j = 0;
         for (Intervalo n: conv.getIntervalosNormal())
         {

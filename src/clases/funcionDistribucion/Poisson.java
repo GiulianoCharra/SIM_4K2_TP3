@@ -92,21 +92,21 @@ public class Poisson
 
     private void calcularF_Observada()
     {
-        System.out.println("\n" + (Arrays.toString(poisson)) + "\n");
-        for (double n: poisson)
+        for (int n: poisson)
         {
-            for (Intervalo i: intervalosPoisson)
-            {
-                System.out.println("Inf: " + i.getInferior()+
-                        " Sup: " + i.getSuperior()+
-                        " N°: " + n);
-                if (n == i.getNumIt())
-                {
-                    System.out.println("aceptado");
-                    i.contar();
-                    break;
-                }
-            }
+            intervalosPoisson.get(n-min).contar();
+//            for (Intervalo i: intervalosPoisson)
+//            {
+//                System.out.println("Inf: " + i.getInferior()+
+//                        " Sup: " + i.getSuperior()+
+//                        " N°: " + n);
+//                if (n == i.getNumIt())
+//                {
+//                    System.out.println("aceptado");
+//                    i.contar();
+//                    break;
+//                }
+//            }
         }
     }
 
@@ -115,7 +115,8 @@ public class Poisson
         int dif = max - min;
         int pos = min;
         System.out.println("min: " + min + " max: " + max + " dif: " + dif);
-        for (int i = 0; i <= dif; i++) {
+        for (int i = 0; i <= dif; i++)
+        {
             intervalosPoisson.add(new Intervalo(pos,pos,pos));
             pos++;
         }
@@ -165,14 +166,15 @@ public class Poisson
 
     public void probabilidad(int tam)
     {
+        System.out.println("\n----Aca se calcula la FE------\n ");
         double p ;
         for (Intervalo ie: intervalosPoisson)
         {
-            System.out.println("\nintervalo: " + ie.getNumIt() + " lambda: " + lambda + " factorial: " + factorial(ie.getNumIt()));
+            //System.out.println("\nintervalo: " + ie.getNumIt() + " lambda: " + lambda + " factorial: " + factorial(ie.getNumIt()));
             double fact = factorial(ie.getNumIt());
             p = (Math.pow(lambda,ie.getNumIt())* Math.pow(Math.E,-lambda))/fact;
 
-            System.out.println(p*tam);
+            //System.out.println(p*tam);
             ie.setF_Esp(Math.round(p * tam));
 
             System.out.println("frecuencia esperada: " + ie);
@@ -182,42 +184,48 @@ public class Poisson
 
     public ObservableList<Intervalo> crearTablaChi()
     {
+        System.out.println("\n-----Aca creo la tabla con las filar don FE >=5-------\n");
+
         ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
         Intervalo aux = new Intervalo();
-
 
         boolean ban = false;
 
         for (Intervalo ie: intervalosPoisson)
         {
-            if (ie.getF_Esp()>= 5)
+            if (!ban)
             {
-                tablaChi.add(ie);
-            }
-            else
-            {
-                if (!ban)
+                if (ie.getF_Esp()>= 5)
                 {
-                    aux = new Intervalo();
-                    aux = ie;
-                    ban = true;
-
-                    System.out.println("\n SOy el auxiliar: " + aux);
+                    tablaChi.add(new Intervalo(ie));
                 }
                 else
                 {
-                    aux.setSuperior(ie.getSuperior());
-                    aux.setF_Obs(aux.getF_Obs() + ie.getF_Obs());
-                    aux.setF_Esp(aux.getF_Esp() + ie.getF_Esp());
+                    aux = new Intervalo(ie);
+                    ban = true;
+                    System.out.println("\nAsigno  el auxiliar: " + aux);
 
-                    System.out.println("\n SOy el auxiliar: " + aux);
+                    System.out.println("Intervalo origen: " + ie);
+                }
+            }
+            else
+            {
+                //System.out.println("\nAntes de actualizar: " + intervalosNormal.get(i));
+                float sup = ie.getSuperior();
+                int fO = ie.getF_Obs();
+                float fE = ie.getF_Esp();
+                //System.out.println(aux.getF_Esp() + " " + fE);
+                aux.setSuperior(sup);
+                aux.setF_Obs(aux.getF_Obs() + fO);
+                aux.setF_Esp(aux.getF_Esp() + fE);
+                System.out.println("Actualize el auxiliar: " + aux);
 
-                    if (aux.getF_Esp()>= 5)
-                    {
-                        tablaChi.add(aux);
-                        aux = null;
-                        ban = false;
-                    }
+                if (aux.getF_Esp()>= 5)
+                {
+                    tablaChi.add(aux);
+                    aux = null;
+                    ban = false;
+                    //System.out.println("Limpio el Auxiliar: " + aux);
                 }
             }
         }
@@ -229,12 +237,12 @@ public class Poisson
             last.setF_Obs(last.getF_Obs() + aux.getF_Obs());
             last.setF_Esp(last.getF_Esp() + aux.getF_Esp());
         }
-
-        for (Intervalo e: tablaChi
-        ) {
-            System.out.println("\n"+e);
-
-        }
+//        int j=0;
+//        for (Intervalo e: tablaChi
+//        ) {
+//            System.out.println("Fila Chi Final " + j +": "+e);
+//            j++;
+//        }
 
         return tablaChi;
     }
@@ -256,7 +264,7 @@ public class Poisson
             fO = chi.getF_Obs();
             fE = chi.getF_Esp();
             float v = (float) (Math.pow((fO - fE), 2) / fE);
-            System.out.println("fObse:" +fO+ " fEsp: " + fE+" nuevo: " + sum + "+"+ v + "= " + ((sum + v)) );
+            //System.out.println("fObse:" +fO+ " fEsp: " + fE+" nuevo: " + sum + "+"+ v + "= " + ((sum + v)) );
             sum += v;
             chi.setChi((float)Math.round(sum * 1000) / 1000);
         }

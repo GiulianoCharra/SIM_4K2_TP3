@@ -46,7 +46,7 @@
             </LineChart>
             <TableView fx:id="tv_Distribuccion" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="883.0" prefWidth="759.0" GridPane.columnIndex="1">
                 <placeholder>
-                    <Label text="No soy Panzon soy Poisson!!" />
+                    <Label text="No soy Panzon soy Poisson, POISSONNN!!!" />
                 </placeholder>
                 <columnResizePolicy>
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

@@ -74,8 +74,15 @@ public class PoissonController implements Initializable
         tf.textProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue observableValue, String o, String num) {
-                if (!num.matches("\\d*([.]\\d{0,16})?")) {
-                    tf.setText(num.replaceAll("[^\\d]", ""));
+                if (!num.matches("\\d+([.]\\d{0,4})?"))
+                {
+                    if (!tf.getText().isEmpty())
+                    {
+                        char[] str = num.toCharArray();
+                        str[str.length - 1] = '\0';
+                        tf.setText(String.valueOf(str));
+                    }
+                    //tf.setText(num.replaceAll("[^\\d]", ""));
                 }
             }
 
@@ -116,12 +123,15 @@ public class PoissonController implements Initializable
         frecE.setName("Esperada");
         frecO.setName("Obserbada");
 
-        int j = 0;
+        int pos;
+        System.out.println("\n------Lo que se carga en la Tabla-----\n");
         for (Intervalo n: poisson.getIntervalosPoisson())
         {
-            frecO.getData().add(new XYChart.Data("" + j, n.getF_Obs()));
-            frecE.getData().add(new XYChart.Data("" + j, n.getF_Esp()));
-            j++;
+            pos = n.getNumIt();
+            System.out.println("Intervalo " + pos + ": " + n);
+            frecO.getData().add(new XYChart.Data("" + pos, n.getF_Obs()));
+            frecE.getData().add(new XYChart.Data("" + pos, n.getF_Esp()));
+            pos++;
         }
 
         lc_Distribucion.getData().clear();

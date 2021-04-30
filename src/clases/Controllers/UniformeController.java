@@ -75,10 +75,21 @@ public class UniformeController implements Initializable
     {
         tf.textProperty().addListener(new ChangeListener<String>() {
             @Override
-            public void changed(ObservableValue observableValue, String o, String num) {
-                if (!num.matches("\\d*([.]\\d{0,16})?")) {
-                    tf.setText(num.replaceAll("[^\\d]", ""));
+            public void changed(ObservableValue observableValue, String o, String num)
+            {
+                if (!num.matches("^(-|\\d)(\\d)*([.]\\d{0,4})?"))
+                {
+                    if (!tf.getText().isEmpty())
+                    {
+                        char[] str = num.toCharArray();
+                        str[str.length - 1] = '\0';
+                        tf.setText(String.valueOf(str));
+                    }
                 }
+//                if (!num.matches("\\d*([.]\\d{0,16})?"))
+//                {
+//                    tf.setText(num.replaceAll("[^\\d]", ""));
+//                }
             }
 
         });

@@ -113,12 +113,12 @@ public class Uniforme
         {
             for (Intervalo i: intervalosUniforme)
             {
-                System.out.println("Inf: " + i.getInferior()+
+                /*System.out.println("Inf: " + i.getInferior()+
                         " Sup: " + i.getSuperior()+
-                        " N°: " + n);
+                        " N°: " + n);*/
                 if (n <= i.getSuperior())
                 {
-                    System.out.println("aceptado");
+                    //System.out.println("aceptado");
                     i.contar();
                     break;
                 }
@@ -160,33 +160,38 @@ public class Uniforme
 
         for (Intervalo ie: intervalosUniforme)
         {
-            if (ie.getF_Esp()>= 5)
+            if (!ban)
             {
-                tablaChi.add(ie);
-            }
-            else
-            {
-                if (!ban)
+                if (ie.getF_Esp()>= 5)
                 {
-                    aux = ie;
-                    ban = true;
-
-                    System.out.println("\n SOy el auxiliar: " + aux);
+                    tablaChi.add(new Intervalo(ie));
                 }
                 else
                 {
-                    aux.setSuperior(ie.getSuperior());
-                    aux.setF_Obs(aux.getF_Obs() + ie.getF_Obs());
-                    aux.setF_Esp(aux.getF_Esp() + ie.getF_Esp());
+                    aux = new Intervalo(ie);
+                    ban = true;
+                    System.out.println("\nAsigno  el auxiliar: " + aux);
+                }
+            }
+            else
+            {
+                //System.out.println("\nAntes de actualizar: " + intervalosNormal.get(i));
+                float sup = ie.getSuperior();
+                int fO = ie.getF_Obs();
+                float fE = ie.getF_Esp();
+                //System.out.println(aux.getF_Esp() + " " + fE);
+                aux.setSuperior(sup);
+                aux.setF_Obs(aux.getF_Obs() + fO);
+                aux.setF_Esp(aux.getF_Esp() + fE);
+                //System.out.println("despues de actualizar: " + intervalosNormal.get(i));
+                System.out.println("Actualizo el auxiliar: " + aux);
 
-                    System.out.println("\n SOy el auxiliar: " + aux);
-
-                    if (aux.getF_Esp()>= 5)
-                    {
-                        tablaChi.add(aux);
-                        aux = null;
-                        ban = false;
-                    }
+                if (aux.getF_Esp()>= 5)
+                {
+                    tablaChi.add(aux);
+                    aux = null;
+                    ban = false;
+                    //System.out.println("Limpio el Auxiliar: " + aux);
                 }
             }
         }

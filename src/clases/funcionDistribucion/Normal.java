@@ -81,18 +81,17 @@ public class Normal
 
         System.out.println("PRIMERA PARTE \n genera lo random");
 
-        System.out.println("Primera muestra: " + muestra);
         if (muestra % 2 != 0)
         {
             muestra += 1;
         }
-        System.out.println("Nueva muestra: " + muestra);
+
 
         double[] numeros = new double[muestra];
         for (int i = 0; i < muestra; i++)
         {
             numeros[i] = Math.random();
-            System.out.println(String.valueOf(numeros[i]).replace('.',','));
+            //System.out.println(String.valueOf(numeros[i]).replace('.',','));
         }
 
         return generadorBox_Muller(media, desviacion, numeros);
@@ -217,19 +216,21 @@ public class Normal
         return normal;
     }
 
+
+
     private void calcularF_Observada()
     {
-        System.out.println((normal));
+
         for (double n: normal)
         {
             for (Intervalo i: intervalosNormal)
             {
-                System.out.println("Inf: " + i.getInferior()+
-                        " Sup: " + i.getSuperior()+
-                        " N°: " + n);
+//                System.out.println("Inf: " + i.getInferior()+
+//                        " Sup: " + i.getSuperior()+
+//                        " N°: " + n);
                 if (n <= i.getSuperior())
                 {
-                    System.out.println("aceptado");
+                    //System.out.println("aceptado");
                     i.contar();
                     break;
                 }
@@ -249,7 +250,7 @@ public class Normal
         {
             intervalosNormal.add(new Intervalo(i,(float) Math.round(desde * 10000) / 10000, (float) Math.round((desde + ancho) * 10000) / 10000));
             desde += ancho;
-            System.out.println(intervalosNormal.get(i));
+            //System.out.println(intervalosNormal.get(i));
         }
 
 
@@ -257,14 +258,15 @@ public class Normal
 
     public void probabilidad(int tam)
     {
+        System.out.println("\n------Se calcula la FE------\n");
         double p ;
         for (Intervalo ie: intervalosNormal)
         {
             p = (Math.pow(Math.E,(-0.5*(Math.pow((((ie.getInferior()+ ie.getSuperior())/2)-media),2))))/(desviacion * Math.sqrt(2*Math.PI)))*(ie.getSuperior()-ie.getInferior());
 
-            System.out.println(p);
+            //System.out.println(p * tam);
             ie.setF_Esp((float)Math.round((p * tam)*10000)/10000);
-            System.out.println("frecuencia esperada: " + ie);
+            System.out.println(ie);
         }
 
     }
@@ -272,45 +274,52 @@ public class Normal
 
     public ObservableList<Intervalo> crearTablaChi()
     {
-        ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
-        Intervalo aux = new Intervalo();
+        System.out.println("\nAca se crea la table de Chi agrupando filas si la FE en menor a 5\n");
 
+        ObservableList<Intervalo> tablaChi = FXCollections.observableArrayList();
+        Intervalo aux = null;
 
         boolean ban = false;
 
         for (Intervalo ie: intervalosNormal)
         {
-            if (ie.getF_Esp()>= 5)
+            if (!ban)
             {
-                tablaChi.add(ie);
-            }
-            else
-            {
-                if (!ban)
+                if (ie.getF_Esp()>= 5)
                 {
-                    aux = new Intervalo();
-                    aux = ie;
-                    ban = true;
-
-                    System.out.println("\n SOy el auxiliar: " + aux);
+                    tablaChi.add(new Intervalo(ie));
                 }
                 else
                 {
-                    aux.setSuperior(ie.getSuperior());
-                    aux.setF_Obs(aux.getF_Obs() + ie.getF_Obs());
-                    aux.setF_Esp(aux.getF_Esp() + ie.getF_Esp());
-
-                    System.out.println("\n SOy el auxiliar: " + aux);
-
-                    if (aux.getF_Esp()>= 5)
-                    {
-                        tablaChi.add(aux);
-                        aux = null;
-                        ban = false;
-                    }
+                    aux = new Intervalo(ie);
+                    ban = true;
+                    System.out.println("\nAsigno  el auxiliar: " + aux);
+                    //System.out.println("Original: " + ie);
                 }
             }
+            else
+            {
+                //System.out.println("\nAntes de actualizar: " + intervalosNormal.get(i));
+                float sup = ie.getSuperior();
+                int fO = ie.getF_Obs();
+                float fE = ie.getF_Esp();
+                //System.out.println("Asigno de variablesr: " + intervalosNormal.get(i));
+                aux.setSuperior(sup);
+                aux.setF_Obs(aux.getF_Obs() + fO);
+                aux.setF_Esp(aux.getF_Esp() + fE);
+                //System.out.println("Actualizo el auxiliar: " + aux);
+
+                if (aux.getF_Esp()>= 5)
+                {
+                    tablaChi.add(aux);
+                    aux = null;
+                    ban = false;
+                    //System.out.println("Limpio el Auxiliar: " + aux);
+                }
+            }
+
         }
+
 
         if (aux != null)
         {
@@ -318,11 +327,12 @@ public class Normal
             last.setSuperior(aux.getSuperior());
             last.setF_Obs(last.getF_Obs() + aux.getF_Obs());
             last.setF_Esp(last.getF_Esp() + aux.getF_Esp());
-        }
+//
+//            int num = last.getNumIt();
+//            float sup = aux.getSuperior();
+//            int fO = last.getF_Obs() + aux.getF_Obs();
+//            float fE = last.getF_Esp() + aux.getF_Esp();
 
-        for (Intervalo e: tablaChi
-        ) {
-            System.out.println("\n"+e);
 
         }
 
@@ -340,13 +350,14 @@ public class Normal
         float fE;
 
         ObservableList<Intervalo> tablaChi = crearTablaChi();
-
+        System.out.println("\n");
         for (Intervalo chi: tablaChi)
         {
             fO = chi.getF_Obs();
             fE = chi.getF_Esp();
             float v = (float) (Math.pow((fO - fE), 2) / fE);
-            System.out.println("fObse:" +fO+ " fEsp: " + fE+" nuevo: " + sum + "+"+ v + "= " + ((sum + v)) );
+            System.out.println(chi);
+            System.out.println("calc: " + sum + "+"+ v + "= " + ((sum + v)) );
             sum += v;
             chi.setChi((float)Math.round(sum * 1000) / 1000);
         }

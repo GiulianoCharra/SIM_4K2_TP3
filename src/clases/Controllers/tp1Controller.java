@@ -295,8 +295,9 @@ public class tp1Controller implements Initializable {
             return;
         }
 
-        chi.calcularChi(vecMuestra);
-        tv_Test_Chi.setItems(chi.getIntervalos());
+        ObservableList<Intervalo> tablaChi =  chi.calcularChi(vecMuestra);
+
+        tv_Test_Chi.setItems(tablaChi);
 
         XYChart.Series fObs = new XYChart.Series();
         XYChart.Series fEsp = new XYChart.Series();

@@ -9,12 +9,23 @@ public class Intervalo
     private float f_Esp;
     private float chi;
 
-    public Intervalo() {
+    public Intervalo()
+    {
     }
 
     public Intervalo(int numIt)
     {
         this.numIt = numIt;
+    }
+
+    public Intervalo(Intervalo copy)
+    {
+        this.numIt = copy.getNumIt();
+        this.inferior = copy.getInferior();
+        this.superior = copy.getSuperior();
+        this.f_Obs = copy.getF_Obs();
+        this.f_Esp = copy.getF_Esp();
+        this.chi = copy.getChi();
     }
 
     public Intervalo(int num, float inferior, float superior)
@@ -26,7 +37,8 @@ public class Intervalo
         this.f_Esp = 0;
     }
 
-    public Intervalo(int numIt, float inferior, float superior, float f_Esp) {
+    public Intervalo(int numIt, float inferior, float superior, float f_Esp)
+    {
         this.numIt = numIt;
         this.inferior = inferior;
         this.superior = superior;
