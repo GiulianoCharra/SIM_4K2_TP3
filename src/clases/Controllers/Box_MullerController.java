@@ -99,10 +99,10 @@ public class Box_MullerController implements Initializable
     }
 
 
-    public void calcularVarianza()
-    {
+    public void calcularVarianza() throws InterruptedException {
         if (tf_Varianza.getText().isEmpty())
             return;
+        //Thread.sleep(2000);
 
         double varianza = Double.parseDouble(tf_Varianza.getText());
         double desviacion = (double) Math.round( Math.sqrt(varianza)*10000)/10000;
@@ -110,11 +110,10 @@ public class Box_MullerController implements Initializable
         tf_Desviacion.setText(String.valueOf(desviacion));
     }
 
-    public void calcularDesviacion()
-    {
+    public void calcularDesviacion() throws InterruptedException {
         if (tf_Desviacion.getText().isEmpty())
             return;
-
+        //Thread.sleep(2000);
         double desviacion = Double.parseDouble(tf_Desviacion.getText());
         double varianza =(double)Math.round( Math.pow(desviacion,2)*10000)/10000;
 
